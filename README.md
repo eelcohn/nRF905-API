@@ -13,7 +13,7 @@ nRF905 Arduino API. Compatible with ESP8266 and ESP32 boards, tested on *NodeMCU
 #### ESP8266 NodeMCU
 | nRF905 pin | ESP8266 pin | ESP8266 GPIO |
 |:----------:|:-----------:|:------------:|
-|     AM     |      S3     |    GPIO 10   |
+|     AM     |      RX     |    GPIO 3    |
 |     CD     |      S2     |    GPIO 9    |
 |     CE     |      D2     |    GPIO 4    |
 |     DR     |      D1     |    GPIO 5    |
@@ -23,6 +23,8 @@ nRF905 Arduino API. Compatible with ESP8266 and ESP32 boards, tested on *NodeMCU
 |    MISO    | D6 / HMISO  |    GPIO 12   |
 |     CLK    | D5 / HCLK   |    GPIO 14   |
 |     CS     | D8 / HCS    |    GPIO 15   |
+
+Please disconnect the AM (GPIO3) wire before programming the NodeMCU! Programming will fail if you leave it connected during the programming operation. Reconnect it after programming is succesfull.
 
 #### ESP32
 | nRF905 pin | ESP32 pin | ESP32 GPIO |
