@@ -2,7 +2,7 @@
 nRF905 Arduino API. Compatible with ESP8266 and ESP32 boards, tested on *NodeMCU 1.0 (ESP-12E module)* and *DOIT ESP32 Dev Module*.
 
 ## Compiling / Installing
-1. Open the .ino file in Arduino IDE
+1. Open the [nRF905API.ino](https://github.com/eelcohn/nRF905-API/blob/master/src/nRF905API/nRF905API.ino) file in Arduino IDE
 2. Open [config.h](https://github.com/eelcohn/nRF905-API/blob/master/src/nRF905API/config.h) and edit the following entries:
     * `WIFI_SSID`: Enter the name of your WiFi network
     * `WIFI_PASSWORD`: Enter the password of your WiFi network
