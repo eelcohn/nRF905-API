@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Configuration file with usernames and passwords
+/src/nRF905API/config.h
+

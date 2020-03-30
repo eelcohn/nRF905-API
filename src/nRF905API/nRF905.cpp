@@ -23,7 +23,7 @@ nRF905::nRF905(uint8_t am, uint8_t cd, uint8_t ce, uint8_t dr, uint8_t pwr, uint
 nRF905::~nRF905(void) {
 }
 
-bool nRF905::init(void) {
+bool nRF905::init(const uint32_t xtal_frequency, const uint32_t clk_out_frequency, const bool clk_out_enable) {
 	board->setPinMode(_am, INPUT);
 	board->setPinMode(_cd, INPUT);
 	board->setPinMode(_ce, OUTPUT);
@@ -31,8 +31,8 @@ bool nRF905::init(void) {
 	board->setPinMode(_dr, INPUT);
 	board->setPinMode(_pwr, OUTPUT);
 	board->setPinMode(_txen, OUTPUT);
-	board->writePin(_ce, HIGH);
 	board->writePin(_spi_cs, LOW);
+	board->writePin(_ce, LOW);
 	board->writePin(_pwr, HIGH);
 	board->writePin(_txen, LOW);
 
@@ -42,9 +42,19 @@ bool nRF905::init(void) {
 	board->SPISetFrequency(this->_spi_frequency);
 	board->writePin(_spi_cs, HIGH);
 
-	/* Get default config from the nRF905 */
-	this->readConfigRegisters();
-	this->decodeConfigRegisters();
+	this->setModeIdle();
+	/* Get config from NVRAM */
+	if (this->readNVRAM() == false) {
+		/* Invalid values in NVRAM; get default config from the nRF905 */
+		this->readConfigRegisters();
+		this->decodeConfigRegisters();
+	}
+
+	this->setXtalFrequency(xtal_frequency);
+	this->setClkOutFrequency(clk_out_frequency);
+	this->setClkOut(clk_out_enable);
+	this->encodeConfigRegisters();
+	this->writeConfigRegisters();
 
 	return true;
 }
@@ -63,9 +73,13 @@ bool nRF905::setFrequency(const uint32_t frequency) {
 	if ((frequency > 473500000) && (frequency < 844800000))
 		return false;
 	if (frequency > 473500000) {
+		if ((frequency % 200000) != 0)
+			return false;
 		this->_band = true;
-		this->_channel = (((frequency / 2) - 422400000) / 100000);
+		this->_channel = ((frequency - 844800000) / 200000);
 	} else {
+		if ((frequency % 100000) != 0)
+			return false;
 		this->_band = false;
 		this->_channel = ((frequency - 422400000) / 100000);
 	}
@@ -269,28 +283,39 @@ bool nRF905::setClkOutFrequency(const uint32_t frequency) {
 	return true;
 }
 
-
-void nRF905::setModeIdle(void) {
-	if (_mode != Idle) {
+void nRF905::setModePowerDown(void) {
+	if (_mode != PowerDown) {
+		board->writePin(_pwr, LOW);
 		board->writePin(_ce, LOW);
 		board->writePin(_txen, LOW);
 		_mode = Idle;
 	}
 }
 
-void nRF905::setModeRx(void) {
-	if (_mode != Rx) {
+void nRF905::setModeIdle(void) {
+	if (_mode != Idle) {
+		board->writePin(_pwr, HIGH);
+		board->writePin(_ce, LOW);
 		board->writePin(_txen, LOW);
-		board->writePin(_ce, HIGH);
-		_mode = Rx;
+		_mode = Idle;
 	}
 }
 
-void nRF905::setModeTx(void) {
-	if (_mode != Tx) {
-		board->writePin(_txen, HIGH);
+void nRF905::setModeReceive(void) {
+	if (_mode != Receive) {
+		board->writePin(_pwr, HIGH);
 		board->writePin(_ce, HIGH);
-		_mode = Tx;
+		board->writePin(_txen, LOW);
+		_mode = Receive;
+	}
+}
+
+void nRF905::setModeTransmit(void) {
+	if (_mode != Transmit) {
+		board->writePin(_pwr, HIGH);
+		board->writePin(_ce, HIGH);
+		board->writePin(_txen, HIGH);
+		_mode = Transmit;
 	}
 }
 
@@ -392,6 +417,7 @@ void nRF905::encodeConfigRegisters(void) {
 }
 
 void nRF905::readConfigRegisters(void) {
+	this->setModeIdle();
 	this->_config_registers.command = NRF905_COMMAND_R_CONFIG;
 	memset(this->_config_registers.config, 0, sizeof(this->_config_registers.config));
 	board->SPITransfern(this->_config_registers.buffer, sizeof(this->_config_registers.buffer));
@@ -399,6 +425,7 @@ void nRF905::readConfigRegisters(void) {
 }
 
 bool nRF905::writeConfigRegisters(void) {
+	this->setModeIdle();
 	this->_config_registers.command = NRF905_COMMAND_W_CONFIG;
 	board->SPITransfern(this->_config_registers.buffer, sizeof(this->_config_registers.buffer));
 	this->_status = this->_config_registers.command;
@@ -406,15 +433,16 @@ bool nRF905::writeConfigRegisters(void) {
 }
 
 void nRF905::readTxPayload(uint8_t * buffer) {
+	this->setModeIdle();
 	this->_tx_payload.command = NRF905_COMMAND_R_TX_PAYLOAD;
 	memset(this->_tx_payload.payload, 0, sizeof(this->_tx_payload.buffer));
 	board->SPITransfern(this->_tx_payload.buffer, sizeof(this->_tx_payload.buffer));
 	memcpy(buffer, this->_tx_payload.payload, sizeof(this->_tx_payload.payload));
-//	memcpy(buffer, &this->_tx_payload.payload, sizeof(this->_tx_payload.payload));
 	this->_status = this->_config_registers.command;
 }
 
 void nRF905::writeTxPayload(const uint8_t * buffer) {
+	this->setModeIdle();
 	this->_tx_payload.command = NRF905_COMMAND_W_TX_PAYLOAD;
 	memcpy(this->_tx_payload.payload, buffer, sizeof(this->_tx_payload.payload));
 	board->SPITransfern(this->_tx_payload.buffer, sizeof(this->_tx_payload.buffer));
@@ -424,7 +452,9 @@ void nRF905::writeTxPayload(const uint8_t * buffer) {
 void nRF905::readRxPayload(uint8_t * buffer) {
 	this->_rx_payload.command = NRF905_COMMAND_R_RX_PAYLOAD;
 	memset(this->_rx_payload.payload, 0, sizeof(this->_rx_payload.payload));
+//	this->setModeIdle();
 	board->SPITransfern(this->_rx_payload.buffer, sizeof(this->_rx_payload.buffer));
+//	this->setModeReceive();
 	memcpy(buffer, this->_rx_payload.payload, sizeof(this->_rx_payload.payload));
 	this->_status = this->_config_registers.command;
 }
@@ -432,6 +462,7 @@ void nRF905::readRxPayload(uint8_t * buffer) {
 void nRF905::readTxAddress(void) {
 	nRF905AddressBuffer tx_addressbuffer;
 
+	this->setModeIdle();
 	tx_addressbuffer.command = NRF905_COMMAND_R_TX_ADDRESS;
 	tx_addressbuffer.address[0] = 0x00;
 	tx_addressbuffer.address[1] = 0x00;
@@ -448,6 +479,7 @@ void nRF905::readTxAddress(void) {
 void nRF905::writeTxAddress(void) {
 	nRF905AddressBuffer tx_addressbuffer;
 
+	this->setModeIdle();
 	tx_addressbuffer.command = NRF905_COMMAND_W_TX_ADDRESS;
 	tx_addressbuffer.address[3] = (this->_tx_address >> 24) & 0xFF;
 	tx_addressbuffer.address[2] = (this->_tx_address >> 16) & 0xFF;
@@ -486,13 +518,14 @@ void nRF905::channelConfig(void) {
 		buffer[0] |= 0x01;
 	buffer[1] = this->_channel & 0xFF;
 
+	this->setModeIdle();
 	board->SPITransfern(buffer, sizeof(buffer));
 	this->_status = buffer[0];
 }
 
 bool nRF905::startTx(uint32_t retransmit, uint32_t timeout) {
 	unsigned long startTime;
-	uint32_t txdelay;
+//	uint32_t txdelay, txnum;
 	bool done;
 
 	// Set or clear retransmit flag
@@ -503,7 +536,7 @@ bool nRF905::startTx(uint32_t retransmit, uint32_t timeout) {
 			this->encodeConfigRegisters();
 			this->writeConfigRegisters();
 		}
-		txdelay = retransmit;				// TODO replace txdelay with retransmit loop; DR=HIGH at beginning of transmit in retrans-mode, LOW at end of transmit in retrans-mode
+//		txdelay = retransmit;					// TODO replace txdelay with retransmit loop; DR=HIGH at beginning of transmit in retrans-mode, LOW at end of transmit in retrans-mode
 	} else {
 		// Clear retransmit flag if it wasn't cleared already
 		if (retransmit == 0) {
@@ -511,20 +544,81 @@ bool nRF905::startTx(uint32_t retransmit, uint32_t timeout) {
 			this->encodeConfigRegisters();
 			this->writeConfigRegisters();
 		}
-		txdelay = 100;					// TODO replace txdelay with wait loop; DR=HIGH after transmission
+//		txdelay = 100;						// TODO replace txdelay with wait loop; DR=HIGH after transmission
 	}
 
 	done = false;
+//	txnum = 0;
 	startTime = millis();
+	this->setModeTransmit();
 	while (((millis() - startTime) < 200) && (done == false)) {	// TODO figure out what timeout we want
 		if (board->readPin(PIN_CD) == LOW) {			// Collision detection
-			this->setModeTx();
-			delay(txdelay);
-			this->setModeRx();
+			while (board->readPin(PIN_DR) != HIGH)
+				delay(1);
+
 			done = true;
 		}
 	}
+	this->setModeReceive();
 
 	return done;
+}
+
+bool nRF905::readNVRAM(void) {
+	size_t i;
+	nRF905NVRAMBuffer buffer;
+
+	board->ReadNVRAM((uint8_t *) &buffer, NRF905_NVRAM_OFFSET, sizeof(buffer));
+	if (buffer.signature == 0xF905) {
+		for (i = 0; i < sizeof(buffer.config); i++)
+			buffer.checksum ^= buffer.config[i];
+		for (i = 0; i < sizeof(buffer.tx_payload); i++)
+			buffer.checksum ^= buffer.tx_payload[i];
+		// TODO add tx_address in checksum
+
+		if (buffer.checksum == NRF905_NVRAM_CHECKSUM) {
+			memcpy(this->_config_registers.config, buffer.config, sizeof(buffer.config));
+			this->setModeIdle();
+			this->decodeConfigRegisters();
+			this->writeConfigRegisters();
+			this->writeTxPayload(buffer.tx_payload);
+			this->_tx_address = buffer.tx_address;
+			return true;
+		} else {
+			Serial.printf("readNVRAM: checksum failed\n");	// TODO remove this
+		}
+	} else {
+		Serial.printf("readNVRAM: signature failed\n");	// TODO remove this
+	}
+	return false;
+}
+
+void nRF905::writeNVRAM(void) {
+	size_t i;
+	nRF905NVRAMBuffer buffer;
+
+	buffer.signature = 0xF905;
+	this->setModeIdle();
+	this->readConfigRegisters();
+	this->decodeConfigRegisters();
+	memcpy(buffer.config, this->_config_registers.config, sizeof(buffer.config));
+	this->readTxPayload(buffer.tx_payload);
+	this->readTxAddress();
+	buffer.tx_address = this->_tx_address;
+
+	buffer.checksum = NRF905_NVRAM_CHECKSUM;
+	for (i = 0; i < sizeof(buffer.config); i++)
+		buffer.checksum ^= buffer.config[i];
+	for (i = 0; i < sizeof(buffer.tx_payload); i++)
+		buffer.checksum ^= buffer.tx_payload[i];
+	// TODO add tx_address in checksum
+
+	board->WriteNVRAM((uint8_t *) &buffer, NRF905_NVRAM_OFFSET, sizeof(buffer));
+}
+
+void nRF905::clearNVRAM(void) {
+	nRF905NVRAMBuffer buffer = {0};
+
+	board->WriteNVRAM((uint8_t *) &buffer, NRF905_NVRAM_OFFSET, sizeof(buffer));
 }
 

@@ -6,7 +6,8 @@
 #ifdef ARDUINO
 #ifdef ARDUINO_ARCH_ESP32
 #include "esp32.h"
-#else
+#endif
+#ifdef ARDUINO_ARCH_ESP8266
 #include "esp8266.h"
 #endif
 #endif

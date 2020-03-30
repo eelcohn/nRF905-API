@@ -1,5 +1,6 @@
 #ifdef ARDUINO_ARCH_ESP8266
 
+#include <EEPROM.h>
 #include <SPI.h>
 #include "config.h"
 #include "esp8266.h"
@@ -12,34 +13,104 @@ ESP8266WebServerSecure server(NRF905API_WWW_PORT);
 ESP8266WebServer server(NRF905API_WWW_PORT);
 #endif
 
-
+ADC_MODE(ADC_VCC);	// Configure ADC to measure Vcc
 
 /* ESP8266 Class functions */
-String Board::get_arch(void) {
+const String Board::get_arch(void) {
 	return "esp8266";
 }
 
-uint16_t Board::get_vcc(void) {
+void Board::reset(void) {
+	ESP.restart();
+}
+
+const String Board::restartReason(void) {
+	return ESP.getResetReason();
+}
+
+const char * Board::getDateTime(void) {
+#if NRF905API_NTP == 1
+	return timeClient.getFormattedTime();
+#else
+	return "";
+#endif
+}
+
+const uint32_t Board::getCPUFreqMhz(void) {
+	return (ESP.getCpuFreqMHz() * 1000000);
+}
+
+const char * Board::getSdkVersion(void) {
+	return ESP.getSdkVersion();
+}
+
+void Board::setADCtoVccMode(void) {
+}
+
+const uint16_t Board::get_vcc(void) {
 	return ESP.getVcc();
 }
 
-uint32_t Board::get_cpu_id(void) {
+const uint32_t Board::get_cpu_id(void) {
 	return ESP.getChipId();
 }
 
-uint32_t Board::get_flash_chip_id(void) {
+const uint32_t Board::get_flash_chip_id(void) {
 	return ESP.getFlashChipId();
 }
 
-uint32_t Board::get_flash_chip_real_size(void) {
+const uint32_t Board::getFlashChipSpeed(void) {
+	return ESP.getFlashChipSpeed();
+}
+
+const bool Board::checkFlashCRC(void) {
+//	return ESP.checkFlashCRC();
+	return true;
+}
+
+const char * Board::getFlashMode(void) {
+	FlashMode_t mode [[gnu::unused]] = ESP.getFlashChipMode();
+
+	return (mode == FM_QIO ? "QIO" : mode == FM_QOUT ? "QOUT" : mode == FM_DIO ? "DIO" : mode == FM_DOUT ? "DOUT" : "UNKNOWN");
+}
+
+const uint32_t Board::get_flash_chip_real_size(void) {
 	return ESP.getFlashChipRealSize();
 }
 
-String Board::get_core_version(void) {
+const uint32_t Board::getFlashChipSdkSize(void) {
+	return ESP.getFlashChipSize();
+}
+
+const uint32_t Board::getSketchSize(void) {
+	return ESP.getSketchSize();
+}
+
+const uint32_t Board::getFreeSketchSpace(void) {
+	return ESP.getFreeSketchSpace();
+}
+
+const String Board::getSketchMD5(void) {
+	return ESP.getSketchMD5();
+}
+
+const uint32_t Board::getFreeHeap(void) {
+	return ESP.getFreeHeap();
+}
+
+const uint32_t Board::getHeapFragmentation(void) {
+	return ESP.getHeapFragmentation();
+}
+
+const uint32_t Board::getHeapMaxFreeBlockSize(void) {
+	return ESP.getMaxFreeBlockSize();
+}
+
+const String Board::get_core_version(void) {
 	return ESP.getCoreVersion();
 }
 
-uint32_t Board::get_core_revision(void) {
+const uint32_t Board::get_core_revision(void) {
 #ifdef ARDUINO_ESP8266_GIT_VER
 	return ARDUINO_ESP8266_GIT_VER;
 #else
@@ -90,7 +161,7 @@ bool Board::SPIBegin(const uint8_t mosi, const uint8_t miso, const uint8_t clk, 
 	this->_spi_cs_active = LOW;
 	this->spi = new SPIClass();
 	this->spi->pins(clk, miso, mosi, cs);
-
+//	this->spi->begin();
 	SPI.begin();
 
 	return true;
@@ -98,6 +169,7 @@ bool Board::SPIBegin(const uint8_t mosi, const uint8_t miso, const uint8_t clk, 
 
 void Board::SPIEnd(void) {
 	SPI.end();
+//	this->spi->end();
 	free(this->spi);
 }
 
@@ -133,15 +205,9 @@ uint8_t Board::SPITransfer(const uint8_t out) {
 	else
 		digitalWrite(this->_spi_cs, HIGH);
 
-	Serial.print("SPI Tx: ");
-	serialPrintHex(&out, 1);
-
 	SPI.beginTransaction(SPISettings(SPISettings(this->_spi_frequency, this->_spi_bitorder, this->_spi_datamode)));
 	in = SPI.transfer(out);
 	SPI.endTransaction();
-
-	Serial.print("SPI Rx: ");
-	serialPrintHex(&in, 1);
 
 	if (this->_spi_cs_active == LOW)
 		digitalWrite(this->_spi_cs, HIGH);
@@ -152,33 +218,48 @@ uint8_t Board::SPITransfer(const uint8_t out) {
 }
 
 void Board::SPITransfern(uint8_t * buffer, const size_t size) {
-	size_t i;
+//	size_t i;
 
 	if (this->_spi_cs_active == LOW)
 		digitalWrite(this->_spi_cs, LOW);
 	else
 		digitalWrite(this->_spi_cs, HIGH);
 
-	Serial.print("SPI Tx len=");
-	Serial.print(size);
-	Serial.print(": ");
-	serialPrintHex(buffer, size);
+//	Serial.print("SPI Tx len=");
+//	Serial.print(size);
+//	Serial.print(": ");
+//	serialPrintHex(buffer, size);
 
 	SPI.beginTransaction(SPISettings(this->_spi_frequency, this->_spi_bitorder, this->_spi_datamode));
-	for (i = 0; i < size; i++)
-		buffer[i] = SPI.transfer(buffer[i]);
-//	spi->transfer(buffer, size);
+//	for (i = 0; i < size; i++)
+//		buffer[i] = SPI.transfer(buffer[i]);
+	spi->transfer(buffer, size);
 	SPI.endTransaction();
 
-	Serial.print("SPI Rx len=");
-	Serial.print(size);
-	Serial.print(": ");
-	serialPrintHex(buffer, size);
+//	Serial.print("SPI Rx len=");
+//	Serial.print(size);
+//	Serial.print(": ");
+//	serialPrintHex(buffer, size);
 
 	if (this->_spi_cs_active == LOW)
 		digitalWrite(this->_spi_cs, HIGH);
 	else
 		digitalWrite(this->_spi_cs, LOW);
+}
+
+void Board::ReadNVRAM(uint8_t * buffer, const uint32_t offset, const size_t size) {
+	size_t i;
+
+	for (i = 0; i < size; i++)
+		buffer[i] = EEPROM.read(offset + i);
+}
+
+void Board::WriteNVRAM(const uint8_t * buffer, const uint32_t offset, const size_t size) {
+	size_t i;
+
+	for (i = 0; i < size; i++)
+		EEPROM.write((offset + i), buffer[i]);
+	EEPROM.commit();
 }
 
 #endif

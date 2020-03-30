@@ -11,10 +11,11 @@ nRF905 Arduino API. Compatible with ESP8266 and ESP32 boards, tested on *NodeMCU
 ## Connecting the nRF905 module to your ESP8266 or ESP32 module
 
 #### ESP8266 NodeMCU
+![NodeMCU pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/nodemcu_pins.png)
 | nRF905 pin | ESP8266 pin | ESP8266 GPIO |
 |:----------:|:-----------:|:------------:|
-|     AM     |      RX     |    GPIO 3    |
-|     CD     |      S2     |    GPIO 9    |
+|     AM     |      -      |      -       |
+|     CD     |      -      |      -       |
 |     CE     |      D2     |    GPIO 4    |
 |     DR     |      D1     |    GPIO 5    |
 |     PWR    |      D3     |    GPIO 0    |
@@ -24,9 +25,11 @@ nRF905 Arduino API. Compatible with ESP8266 and ESP32 boards, tested on *NodeMCU
 |     CLK    | D5 / HCLK   |    GPIO 14   |
 |     CS     | D8 / HCS    |    GPIO 15   |
 
-Please disconnect the AM (GPIO3) wire before programming the NodeMCU! Programming will fail if you leave it connected during the programming operation. Reconnect it after programming is succesfull.
+The NodeMCU doens't have enough GPIO pins for CD and AM to connect to.
 
 #### ESP32
+![ESP32 DevKit 30-pin version pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/ESP32-DOIT-DEVKIT-V1-Board-Pinout-30-GPIOs.png)
+![ESP32 DevKit 36-pin version pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/ESP32-DOIT-DEVKIT-V1-Board-Pinout-36-GPIOs.jpg)
 | nRF905 pin | ESP32 pin | ESP32 GPIO |
 |:----------:|:---------:|:----------:|
 |     AM     |    D32    |  GPIO 32   |
@@ -42,11 +45,11 @@ Please disconnect the AM (GPIO3) wire before programming the NodeMCU! Programmin
 
 ## Usage
 
-### /api/v1/config/
+### /api/v1/config.json
 Configure the nRF905.
 
 Example:<br>
-`http://192.168.x.y/api/v1/config/?frequency=868400000&crc=16&txpower=10&rxpower=normal&rxaddr=a55a5aa5&txaddr=a55a5aa5&rxaddrwidth=4&txaddrwidth=4&rxpayloadwidth=16&txpayloadwidth=16`
+`http://192.168.x.y/api/v1/config.json?frequency=868400000&crc=16&txpower=10&rxpower=normal&rxaddr=a55a5aa5&txaddr=a55a5aa5&rxaddrwidth=4&txaddrwidth=4&rxpayloadwidth=16&txpayloadwidth=16`
 
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
@@ -60,24 +63,36 @@ Example:<br>
 |`rxpayloadwidth`|    No    | Set the number of Rx payload bytes<br>`1...32`: Payload is 1...32 bytes |
 |    `txaddr`    |    No    | Set the Tx address<br>`0x12345678`: Set Tx address to 0x12345678 |
 |    `rxaddr`    |    No    | Set the Rx address<br>`0x12345678`: Set Rx address to 0x12345678 |
+|    `nvram`     |    No    | Store the nRF905 configuration in NVRAM<br>`true`: Store nRF905 config in NVRAM<br>`false`: Do not store nRF905 config in NVRAM |
 
-### /api/v1/receive/
-Not implemented, will probably be removed.
+### /api/v1/receive.json
+This will return a list of received data frames by the nRF905. This API call takes no parameters.
 
-### /api/v1/status/
+### /api/v1/status.json
 This will show a status page with details about the hardware. This API call takes no parameters.
 
 Example:<br>
-`https://192.168.x.y/api/v1/status/`
+`https://192.168.x.y/api/v1/status.json`
 
-### /api/v1/send/
+### /api/v1/send.json
 This will transmit data. After the data has been transmitted, the API will wait for data to be received (a reply to the transmitted data). By default it will wait for 2 seconds, but you can change this by adding the `timeout` parameter.
 
 Example:<br>
-`https://192.168.x.y/api/v1/send/?addr=aabbccdd&payload=0400035efa0c04a55a5aa50000000000&timeout=10`
+`https://192.168.x.y/api/v1/send.json?addr=aabbccdd&payload=0400035efa0c04a55a5aa50000000000&timeout=10`
 
 | Parameter | Required | Description |
 |:---------:|:--------:|:------------|
 | `txaddr`  |   Yes    | Address to send the data to |
 | `payload` |   Yes    | The data to be sent |
 | `timeout` |    No    | Timeout for reading data after the transmission is completed (in seconds)<br>Default: 2 seconds |
+
+### /api/v1/systemconfig.json
+Configure the system board.
+
+Example:<br>
+`https://192.168.x.y/api/v1/systemconfig.json?reset=true`
+
+|  Parameter     | Required | Description |
+|:--------------:|:--------:|:------------|
+|    `reset `    |    No    | Reset the system<br>`true`: Reset system |
+

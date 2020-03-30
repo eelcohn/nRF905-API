@@ -13,6 +13,10 @@
 #define NRF905_COMMAND_R_RX_PAYLOAD	0x24
 #define NRF905_COMMAND_CHANNEL_CONFIG	0x80
 
+/* NVRAM checksum */
+#define NRF905_NVRAM_OFFSET		0x0800		// First 2048 bytes are for the system, so start at 2048 (0x0800)
+#define NRF905_NVRAM_CHECKSUM		0xE5
+
 typedef union {
 	uint8_t	buffer[33];
 	struct {
@@ -37,17 +41,26 @@ typedef union {
 	};
 } nRF905AddressBuffer;
 
+typedef struct {
+	uint16_t		signature;		// Always 0xF905
+	uint8_t		config[10];		// nRF905 config registers
+	uint8_t		tx_payload[32];	// nRF905 Tx payload
+	uint32_t		tx_address;		// nRF905 Tx address
+	uint8_t		checksum;
+} nRF905NVRAMBuffer;
+
 class nRF905 {
 	public:
 		typedef enum {
-			Idle = 0,
-			Rx,
-			Tx
+			PowerDown = 0,
+			Idle,
+			Receive,
+			Transmit
 		} Mode;
 
 				nRF905(uint8_t am, uint8_t cd, uint8_t ce, uint8_t dr, uint8_t pwr, uint8_t txen, uint8_t spi_cs, uint32_t SPIFrequency);
 				~nRF905(void);
-		bool		init(void);
+		bool		init(const uint32_t xtal_frequency, const uint32_t clk_out_frequency, const bool clk_out_enable);
 		uint8_t	getStatus(void);
 		uint32_t	getFrequency(void);
 		bool		setFrequency(const uint32_t frequency);
@@ -79,9 +92,10 @@ class nRF905 {
 		void		setClkOut(const bool extclock);
 		uint32_t	getClkOutFrequency(void);
 		bool		setClkOutFrequency(const uint32_t frequency);
+		void		setModePowerDown(void);
 		void		setModeIdle(void);
-		void		setModeRx(void);
-		void		setModeTx(void);
+		void		setModeReceive(void);
+		void		setModeTransmit(void);
 		void		decodeConfigRegisters(void);
 		void		encodeConfigRegisters(void);
 		void		readConfigRegisters(void);
@@ -93,6 +107,9 @@ class nRF905 {
 		void		readRxPayload(uint8_t * buffer);
 		void		channelConfig(void);
 		bool		startTx(uint32_t retransmit, uint32_t timeout);
+		bool		readNVRAM(void);
+		void		writeNVRAM(void);
+		void		clearNVRAM(void);
 
 	private:
 		uint8_t	_am;

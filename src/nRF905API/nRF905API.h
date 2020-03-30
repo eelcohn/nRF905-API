@@ -6,11 +6,10 @@
 #ifndef __NRF905API_H__
 #define __NRF905API_H__
 
-#include <assert.h>
 #include "config.h"
 
 #define FIRMWARE_TITLE "nRF905 API"
-#define FIRMWARE_VERSION "0.2.1"
+#define FIRMWARE_VERSION "0.3.0"
 
 static const char* _hostname		= WIFI_HOSTNAME;
 static const char* _ssid		= WIFI_SSID;
