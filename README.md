@@ -89,7 +89,10 @@ Example:<br>
 ### /api/v1/systemconfig.json
 Configure the system board.
 
+Example:<br>
+`https://192.168.x.y/api/v1/systemconfig.json?reset=true`
+
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
-|    `reset `    |    No    | Reset the system |
+|    `reset `    |    No    | Reset the system<br>`true`: Reset system |
 
