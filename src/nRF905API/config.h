@@ -6,10 +6,11 @@
 #define WIFI_PASSWORD		"SuperSecretPassword"
 
 #define SERIAL_SPEED		115200
-#define NRF905API_HTTPS		0		// Enable HTTPS server
+#define NRF905API_HTTPS	0		// Enable HTTPS server
+#define NRF905API_IPV6		0		// Enable IPv6
 #define NRF905API_MDNS		0		// Enable mDNS
 #define NRF905API_NTP		0		// Enable NTP client
-#define NRF905API_IPV6		0		// Enable IPv6
+#define NRF905API_SSDP		0		// Enable SSDP (Simple Service Discovery Protocol)
 #define NRF905API_OTA		0		// Enable OTA (Over-The-Air) firmware upgrades for the ESP module
 #define NRF905API_OTA_PORT	8233		// OTA TCP port
 #define NRF905API_OTA_PASSWORD	"c19555f1193996117d477eebde5c913e" // MD5 password hash for password `nrf905`

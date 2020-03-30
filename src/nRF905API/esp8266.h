@@ -16,6 +16,9 @@ extern ESP8266WebServer server;
 #if NRF905API_MDNS == 1
 #include <ESP8266mDNS.h>
 #endif
+#if NRF905API_SSDP == 1
+#include <ESP8266SSDP.h>
+#endif
 
 // NodeMCU pin definitions
 #ifndef PIN_AM
@@ -51,13 +54,29 @@ extern ESP8266WebServer server;
 
 class Board {
 	public:
-		String		get_arch(void);
-		uint16_t	get_vcc(void);
-		uint32_t	get_cpu_id(void);
-		uint32_t	get_flash_chip_id(void);
-		uint32_t	get_flash_chip_real_size(void);
-		String		get_core_version(void);
-		uint32_t	get_core_revision(void);
+		const String		get_arch(void);
+		void		reset(void);
+		const String		restartReason(void);
+		const char *	getDateTime(void);
+		const uint32_t	getCPUFreqMhz(void);
+		const char *	getSdkVersion(void);
+		void		setADCtoVccMode(void);
+		const uint16_t	get_vcc(void);
+		const uint32_t	get_cpu_id(void);
+		const uint32_t	get_flash_chip_id(void);
+		const uint32_t	getFlashChipSpeed(void);
+		const bool	checkFlashCRC(void);
+		const char *	getFlashMode(void);
+		const uint32_t	get_flash_chip_real_size(void);
+		const uint32_t	getFlashChipSdkSize(void);
+		const uint32_t	getSketchSize(void);
+		const uint32_t	getFreeSketchSpace(void);
+		const String	getSketchMD5(void);
+		const uint32_t	getFreeHeap(void);
+		const uint32_t	getHeapFragmentation(void);
+		const uint32_t	getHeapMaxFreeBlockSize(void);
+		const String	get_core_version(void);
+		const uint32_t	get_core_revision(void);
 		String		get_hostname(void);
 		void		set_hostname(const char *hostname);
 		String		get_localIPv6(void);
@@ -74,6 +93,8 @@ class Board {
 		void		SPISetFrequency(const uint32_t frequency);
 		uint8_t	SPITransfer(const uint8_t out);
 		void		SPITransfern(uint8_t * buffer, const size_t size);
+		void		ReadNVRAM(uint8_t * buffer, const uint32_t offset, const size_t size);
+		void		WriteNVRAM(const uint8_t * buffer, const uint32_t offset, const size_t size);
 
 	private:
 		uint32_t	_spi_frequency;
