@@ -14,6 +14,8 @@ nRF905 Arduino API. Compatible with ESP8266 and ESP32 boards, tested on *NodeMCU
 ![NodeMCU pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/nodemcu_pins.png)
 | nRF905 pin | ESP8266 pin | ESP8266 GPIO |
 |:----------:|:-----------:|:------------:|
+|     Vcc    |     3.3V    |    3.3V      |
+|     Gnd    |      Gnd    |     Gnd      |
 |     AM     |      -      |      -       |
 |     CD     |      -      |      -       |
 |     CE     |      D2     |    GPIO 4    |
@@ -32,6 +34,8 @@ The NodeMCU doens't have enough GPIO pins for CD and AM to connect to.
 ![ESP32 DevKit 36-pin version pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/ESP32-DOIT-DEVKIT-V1-Board-Pinout-36-GPIOs.jpg)
 | nRF905 pin | ESP32 pin | ESP32 GPIO |
 |:----------:|:---------:|:----------:|
+|     Vcc    |    3.3V   |    3.3V    |
+|     Gnd    |    Gnd    |    Gnd     |
 |     AM     |    D32    |  GPIO 32   |
 |     CD     |    D33    |  GPIO 33   |
 |     CE     |    D27    |  GPIO 27   |
