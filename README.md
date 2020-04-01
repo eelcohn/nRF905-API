@@ -100,3 +100,45 @@ Example:<br>
 |:--------------:|:--------:|:------------|
 |    `reset `    |    No    | Reset the system<br>`true`: Reset system |
 
+## Zehnder API calls
+
+### /api/v1/zehnder/link.json
+
+Link the nRF905-API to a Zehnder device. This API call takes no parameters.
+
+### /api/v1/zehnder/config.json
+
+Configure the Zehnder parameters.
+
+Example:<br>
+`https://192.168.x.y/api/v1/zehnder/config.json?network=1a2b3c4d&main_unit_id=91&device_id=5d`
+
+|  Parameter     | Required | Description |
+|:--------------:|:--------:|:------------|
+|   `network`    |   Yes    | Network ID of your Zehnder network |
+| `main_unit_id` |   Yes    | ID of your Zehnder main unit |
+|  `device_id`   |   Yes    | ID of your nRF905-API |
+
+### /api/v1/zehnder/setpower.json
+
+Set the power level of your Zehnder device.
+
+Example:<br>
+`https://192.168.x.y/api/v1/zehnder/setpower.json?power=high`
+
+|  Parameter     | Required | Description |
+|:--------------:|:--------:|:------------|
+|    `power`     |   Yes    | Power level:<br>`low`: Low power<br>`medium`: Medium power<br>`high`: High power |
+
+### /api/v1/zehnder/settimer.json
+
+Set the timer of your Zehnder device.
+
+Example:<br>
+`https://192.168.x.y/api/v1/zehnder/settimer.json?power=high&minutes=5`
+
+|  Parameter     | Required | Description |
+|:--------------:|:--------:|:------------|
+|    `power`     |   Yes    | Power level:<br>`low`: Low power<br>`medium`: Medium power<br>`high`: High power |
+|   `minutes`    |   Yes    | Number of minutes |
+

@@ -8,8 +8,9 @@
 
 #include "config.h"
 
-#define FIRMWARE_TITLE "nRF905 API"
-#define FIRMWARE_VERSION "0.3.0"
+#define FIRMWARE_TITLE			"nRF905 API"
+#define FIRMWARE_VERSION		"0.3.1"
+#define NRF905_MAX_FRAMESIZE		32
 
 static const char* _hostname		= WIFI_HOSTNAME;
 static const char* _ssid		= WIFI_SSID;
@@ -20,7 +21,9 @@ static const char* http_json_response	= "application/json; charset=utf-8;";
 static const char* www_username	= NRF905API_WWW_USERNAME;
 static const char* www_password	= NRF905API_WWW_PASSWORD;
 static const char* www_realm		= "nRF905 API authentication";
+#if NRF905API_NTP == 1		// Remove this / ths is here to prevent warning when NTP is disabled and this is unused
 static const char* ntp_server		= NRF905API_NTP_SERVER;
+#endif
 static const uint32_t ntp_offset	= 3600;
 static const uint32_t ntp_updateinterval = 86400;
 static const String authFailResponse	= "Authentication Failed";
