@@ -9,7 +9,7 @@
 #include "config.h"
 
 #define FIRMWARE_TITLE			"nRF905 API"
-#define FIRMWARE_VERSION		"0.3.1"
+#define FIRMWARE_VERSION		"0.3.2"
 #define NRF905_MAX_FRAMESIZE		32
 
 static const char* _hostname		= WIFI_HOSTNAME;
