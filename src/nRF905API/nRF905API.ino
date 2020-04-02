@@ -624,12 +624,6 @@ void zehnder_handleConfig() {
 		err = nrf905->setTxAddress(network);
 		nrf905->writeTxAddress();
 		err = nrf905->setRxAddress(network);
-		nrf905->encodeConfigRegisters();
-		if (nrf905->writeConfigRegisters() == false) {
-			nrf905->setModeReceive();
-			sendReplyError(HTTP_CODE_OK, "Failed to write config to nRF905");
-			return;
-		}
 	} else {
 		sendReplyError(HTTP_CODE_OK, "Parameter 'network' is missing");
 		return;
@@ -663,6 +657,25 @@ void zehnder_handleConfig() {
 
 	zehnder.main_unit_type = 0x01;
 	zehnder.device_type = 0x03;
+
+	nrf905->setModeIdle();		// Set the nRF905 to idle mode
+	nrf905->setFrequency(868400000);
+	nrf905->setCRC(true);
+	nrf905->setCRCbits(16);
+	nrf905->setRxReducedPower(false);
+	nrf905->setTxPower(10);
+	nrf905->setRxAddressWidth(4);
+	nrf905->setTxAddressWidth(4);
+	nrf905->setRxPayloadWidth(16);
+	nrf905->setTxPayloadWidth(16);
+	nrf905->encodeConfigRegisters();
+	if (nrf905->writeConfigRegisters() == false) {
+		nrf905->setModeReceive();
+		sendReplyError(HTTP_CODE_OK, "Failed to write config to nRF905");
+		return;
+	}
+	delay(10);			// Not sure if this is nessecary, but just as a precaution
+	nrf905->setModeReceive();	// Enable Rx mode on the nRF905
 
 	jsonDocument["result"] = "ok";
 	serializeJson(jsonDocument, json);
@@ -708,6 +721,17 @@ void zehnder_handleLink() {
 		timeout = 20000; // 30 seconds default
 
 	/* Set transmit and receive network address to Link address */
+	nrf905->setModeIdle();		// Set the nRF905 to idle mode
+	nrf905->setFrequency(868400000);
+	nrf905->setCRC(true);
+	nrf905->setCRCbits(16);
+	nrf905->setRxReducedPower(false);
+	nrf905->setTxPower(10);
+	nrf905->setRxAddressWidth(4);
+	nrf905->setTxAddressWidth(4);
+	nrf905->setRxPayloadWidth(16);
+	nrf905->setTxPayloadWidth(16);
+
 	nrf905->setRxAddress(network_link_id);
 	nrf905->setTxAddress(network_link_id);
 	nrf905->writeTxAddress();
@@ -717,6 +741,8 @@ void zehnder_handleLink() {
 		sendReplyError(HTTP_CODE_OK, "Failed to write config to nRF905");
 		return;
 	}
+	delay(10);			// Not sure if this is nessecary, but just as a precaution
+	nrf905->setModeReceive();	// Enable Rx mode on the nRF905
 
 	/* Transmit the payload */
 	nrf905->writeTxPayload(payload);
