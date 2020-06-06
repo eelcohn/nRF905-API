@@ -48,6 +48,7 @@ void setup() {
 	Serial.println(firmware_version);
 
 	// Connect to WiFi network
+	WiFi.mode(WIFI_STA);
 	WiFi.begin(_ssid, _password);
 	board->set_hostname(_hostname);
 
