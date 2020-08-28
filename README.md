@@ -106,6 +106,9 @@ Example:<br>
 
 Link the nRF905-API to a Zehnder device. This API call takes no parameters.
 
+Example:<br>
+` https://192.168.x.y/api/v1/zehnder/link.json`
+
 ### /api/v1/zehnder/config.json
 
 Configure the Zehnder parameters.
