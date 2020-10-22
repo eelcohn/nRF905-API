@@ -3,6 +3,18 @@
   written by Eelco Huininga 2020
 */
 
+#ifndef __NRF905_H__
+#define __NRF905_H__
+
+#include "../../board.h"	// PIN_CD
+
+#define MAX_TRANSMIT_TIME 2000	// TODO figure out what timeout we want
+#define CARRIERDETECT_LED_DELAY	20				// On-board LED will light up for 20ms when data is received
+
+/* nRF905 register sizes */
+#define NRF905_REGISTER_COUNT		10
+#define NRF905_MAX_FRAMESIZE		32
+
 /* nRF905 Instructions */
 #define NRF905_COMMAND_W_CONFIG	0x00
 #define NRF905_COMMAND_R_CONFIG	0x10
@@ -13,23 +25,19 @@
 #define NRF905_COMMAND_R_RX_PAYLOAD	0x24
 #define NRF905_COMMAND_CHANNEL_CONFIG	0x80
 
-/* NVRAM checksum */
-#define NRF905_NVRAM_OFFSET		0x0800		// First 2048 bytes are for the system, so start at 2048 (0x0800)
-#define NRF905_NVRAM_CHECKSUM		0xE5
-
 typedef union {
-	uint8_t	buffer[33];
+	uint8_t		buffer[NRF905_MAX_FRAMESIZE + 1];
 	struct {
 		uint8_t	command;
-		uint8_t	payload[32];
+		uint8_t	payload[NRF905_MAX_FRAMESIZE];
 	};
 } nRF905Buffer;
 
 typedef union {
-	uint8_t	buffer[11];
+	uint8_t		buffer[NRF905_REGISTER_COUNT + 1];
 	struct {
 		uint8_t	command;
-		uint8_t	config[10];
+		uint8_t	config[NRF905_REGISTER_COUNT];
 	};
 } nRF905ConfigBuffer;
 
@@ -41,26 +49,21 @@ typedef union {
 	};
 } nRF905AddressBuffer;
 
-typedef struct {
-	uint16_t		signature;		// Always 0xF905
-	uint8_t		config[10];		// nRF905 config registers
-	uint8_t		tx_payload[32];	// nRF905 Tx payload
-	uint32_t		tx_address;		// nRF905 Tx address
-	uint8_t		checksum;
-} nRF905NVRAMBuffer;
+typedef enum {
+	PowerDown = 0,
+	Idle,
+	Receive,
+	Transmit
+} Mode;
 
 class nRF905 {
 	public:
-		typedef enum {
-			PowerDown = 0,
-			Idle,
-			Receive,
-			Transmit
-		} Mode;
-
+				/* Function declarations */
 				nRF905(uint8_t am, uint8_t cd, uint8_t ce, uint8_t dr, uint8_t pwr, uint8_t txen, uint8_t spi_cs, uint32_t SPIFrequency);
 				~nRF905(void);
 		bool		init(const uint32_t xtal_frequency, const uint32_t clk_out_frequency, const bool clk_out_enable);
+		bool		testSPI(void);
+		void		update(void);
 		uint8_t	getStatus(void);
 		uint32_t	getFrequency(void);
 		bool		setFrequency(const uint32_t frequency);
@@ -92,6 +95,8 @@ class nRF905 {
 		void		setClkOut(const bool extclock);
 		uint32_t	getClkOutFrequency(void);
 		bool		setClkOutFrequency(const uint32_t frequency);
+		uint8_t	getMode(void);
+		void		setMode(const uint8_t mode);
 		void		setModePowerDown(void);
 		void		setModeIdle(void);
 		void		setModeReceive(void);
@@ -100,25 +105,33 @@ class nRF905 {
 		void		encodeConfigRegisters(void);
 		void		readConfigRegisters(void);
 		bool		writeConfigRegisters(void);
+		void		restoreConfigRegisters(const uint8_t *buffer);
+		void		backupConfigRegisters(uint8_t *buffer);
 		void		readTxPayload(uint8_t * buffer);
 		void		writeTxPayload(const uint8_t * buffer);
 		void		readTxAddress(void);
 		void		writeTxAddress(void);
 		void		readRxPayload(uint8_t * buffer);
-		void		channelConfig(void);
-		bool		startTx(uint32_t retransmit, uint32_t timeout);
-		bool		readNVRAM(void);
-		void		writeNVRAM(void);
-		void		clearNVRAM(void);
+		bool		startTx(const uint32_t retransmit, const uint8_t mode);
+		static void	startRxISR(void);
+		static void	startTxISR(void);
+#ifdef PIN_CD
+		static void	carrierDetectISR(void);
+#endif
+
+				/* Variable declarations */
+		static volatile bool 		tx_frame_done;
+		static volatile uint32_t	tx_retransmit_count;
+		static volatile unsigned long	startCDLED;			// Time when the on-board LED was turned on
 
 	private:
-		uint8_t	_am;
-		uint8_t	_cd;
-		uint8_t	_ce;
-		uint8_t	_spi_cs;
-		uint8_t	_dr;
-		uint8_t	_pwr;
-		uint8_t	_txen;
+		uint8_t	_am;				// Board hardware pin of the AM connection
+		uint8_t	_cd;				// Board hardware pin of the CD connection
+		uint8_t	_ce;				// Board hardware pin of the CE connection
+		uint8_t	_spi_cs;			// Board hardware pin of the SPI_CS connection
+		uint8_t	_dr;				// Board hardware pin of the DR connection
+		uint8_t	_pwr;				// Board hardware pin of the PWR connection
+		uint8_t	_txen;				// Board hardware pin of the TXEN connection
 
 		uint32_t	_spi_frequency;		// SPI frequency
 
@@ -143,8 +156,18 @@ class nRF905 {
 		uint32_t	_clk_out_frequency;		// nRF905 clock out frequency
 		bool		_clk_out_enable;		// nRF905 clock out enabled: false=off, true=on
 		uint32_t	_xtal_frequency;		// nRF905 clock in frequency
-		nRF905ConfigBuffer	_config_registers;		// Internal: Cached copy of the nRF905's config registers
+		nRF905ConfigBuffer	_config_registers;	// Internal: Cached copy of the nRF905's config registers
 		nRF905Buffer	_rx_payload;			// nRF905 Rx Payload
 		nRF905Buffer	_tx_payload;			// nRF905 Tx Payload
 };
+
+extern nRF905 * nrf905;
+
+void txISR(void);
+#ifdef PIN_CD
+void cdISR(void);
+#endif
+
+
+#endif
 

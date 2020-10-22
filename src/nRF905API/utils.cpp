@@ -1,28 +1,11 @@
-#include <Arduino.h>
-#include "utils.h"
-
-bool validHex(const char * hexstring) {
-	size_t i, len;
-
-	len = strlen(hexstring);
-
-	if ((len == 0) || ((len % 2) != 0))
-		return false;
-
-	for (i = 0; i < len; i++) {
-		if ((hexstring[i] < '0') || ((hexstring[i] & 0xDF) > 'F'))
-			return false;
-		if ((hexstring[i] > '9') && ((hexstring[i] & 0xDF) < 'A'))
-			return false;
-	}
-
-	return true;
-}
+#include <Arduino.h>				// String
+#include "utils.h"				// Function declarations
 
 int hexstringToBin(const char * hexstring, uint8_t * bin, size_t max_size) {
-	size_t i, len;
+	size_t		i,
+			len;
 
-	if (!validHex(hexstring))
+	if (!isHex(hexstring))
 		return -1;
 
 	len = (strlen(hexstring) / 2);
@@ -46,7 +29,7 @@ int hexstringToBin(const char * hexstring, uint8_t * bin, size_t max_size) {
 }
 
 void binToHexstring(const uint8_t *bin, char * hexstring, size_t size) {
-	size_t i;
+	size_t		i;
 
 	for (i = 0; i < size; i++) {
 		hexstring[(i * 2)] = (((bin[i] & 0xF0) >> 4) + 0x30);
@@ -56,10 +39,20 @@ void binToHexstring(const uint8_t *bin, char * hexstring, size_t size) {
 		if (hexstring[(i * 2) + 1] > 0x39)
 			hexstring[(i * 2) + 1] += 7;
 	}
+
+	hexstring[(size * 2)] = '\0';
 }
 
+void uint8ToString(const uint8_t value, char * hexstring) {
+	sprintf(hexstring, "%02X", value);
+}
+       
+void uint32ToString(const uint32_t value, char * hexstring) {
+	sprintf(hexstring, "%08X", value);
+}
+       
 void serialPrintHex(const uint8_t * buffer, const size_t size) {
-	size_t n;
+	size_t		n;
 
 	for (n = 0; n < size; n++) {
 		Serial.print("0x");
@@ -68,5 +61,47 @@ void serialPrintHex(const uint8_t * buffer, const size_t size) {
 		Serial.print(" ");
 	}
 	Serial.println();
+}
+
+bool isHex(const char * hexstring) {
+	size_t		i,
+			len;
+
+	len = strlen(hexstring);
+
+	if ((len == 0) || ((len % 2) != 0))
+		return false;
+
+	for (i = 0; i < len; i++) {
+		if (!isHexadecimalDigit(hexstring[i]))
+//		if ((hexstring[i] < '0') || ((hexstring[i] & 0xDF) > 'F'))
+			return false;
+//		if ((hexstring[i] > '9') && ((hexstring[i] & 0xDF) < 'A'))
+//			return false;
+	}
+
+	return true;
+}
+
+bool isInt(const String & s) {
+	char *		p;
+
+	if (s.length() == 0 || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+')))
+		return false;
+
+	strtol(s.c_str(), &p, 10);
+
+	return (*p == 0);
+}
+
+bool isFloat(const String & s) {
+	char *		p;
+
+	if (s.length() == 0 || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+')))
+		return false;
+
+	strtof(s.c_str(), &p);
+
+	return (*p == 0);
 }
 

@@ -1,18 +1,22 @@
 # nRF905 Arduino API
-nRF905 Arduino API. Compatible with ESP8266 and ESP32 boards, tested on *NodeMCU 1.0 (ESP-12E module)* and *DOIT ESP32 Dev Module*.
+nRF905 Arduino API. Compatible with ESP8266 and ESP32 boards, tested on *Wemos D1 mini Pro*, *NodeMCU 1.0 (ESP-12E module)* and *DOIT ESP32 Dev Module*.
 
 ## Compiling / Installing
-1. Open the [nRF905API.ino](https://github.com/eelcohn/nRF905-API/blob/master/src/nRF905API/nRF905API.ino) file in Arduino IDE
-2. Open [config.h](https://github.com/eelcohn/nRF905-API/blob/master/src/nRF905API/config.h) and edit the following entries:
+1. Install the [Arduino IDE](https://www.arduino.cc/en/Main/Software)
+2. Add the following libraries to Arduino IDE:
+    * ArduinoJson
+    * NTPClient
+3. Open the [nRF905API.ino](https://github.com/eelcohn/nRF905-API/blob/master/src/nRF905API/nRF905API.ino) file in Arduino IDE
+4. Open [config.h](https://github.com/eelcohn/nRF905-API/blob/master/src/nRF905API/config.h) and edit the following entries:
     * `WIFI_SSID`: Enter the name of your WiFi network
     * `WIFI_PASSWORD`: Enter the password of your WiFi network
-3. Go to Sketch and select Upload
+5. Go to Sketch and select Upload
 
 ## Connecting the nRF905 module to your ESP8266 or ESP32 module
 
-#### ESP8266 NodeMCU
+#### NodeMCU 1.0 ESP12E
 ![NodeMCU pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/nodemcu_pins.png)
-| nRF905 pin | ESP8266 pin | ESP8266 GPIO |
+| nRF905 pin | NodeMCU pin | NodeMCU GPIO |
 |:----------:|:-----------:|:------------:|
 |     Vcc    |     3.3V    |    3.3V      |
 |     Gnd    |      Gnd    |     Gnd      |
@@ -29,7 +33,32 @@ nRF905 Arduino API. Compatible with ESP8266 and ESP32 boards, tested on *NodeMCU
 
 The NodeMCU doens't have enough GPIO pins for CD and AM to connect to.
 
-#### ESP32
+##### Manually flash the firmware to the ESP8266 NodeMCU :
+`esptool.py --chip esp8266 --port /dev/ttyUSB0 --baud 115200 --before default_reset --after hard_reset write_flash 0x0 nRF905API.ino.bin`
+
+#### Wemos D1 mini / Wemos D1 mini pro
+![Wemos D1 mini pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/Wemos-D1-mini.png)
+| nRF905 pin | Wemos D1 pin | Wemos D1 GPIO |
+|:----------:|:------------:|:-------------:|
+|     Vcc    |     3.3V     |    3.3V       |
+|     Gnd    |      Gnd     |     Gnd       |
+|     AM     |      -       |      -        |
+|     CD     |      -       |      -        |
+|     CE     |      D2      |    GPIO 4     |
+|     DR     |      D1      |    GPIO 5     |
+|     PWR    |      D3      |    GPIO 0     |
+|    TX_EN   |      D0      |    GPIO 16    |
+|    MOSI    | D7 / HMOSI   |    GPIO 13    |
+|    MISO    | D6 / HMISO   |    GPIO 12    |
+|     CLK    | D5 / HCLK    |    GPIO 14    |
+|     CS     | D8 / HCS     |    GPIO 15    |
+
+The Wemos D1 mini doens't have enough GPIO pins for CD and AM to connect to.
+
+##### Manually flash the firmware on the Wemos D1 mini:
+`esptool.py --chip esp8266 --port /dev/ttyUSB0 --baud 921600 --before default_reset --after hard_reset write_flash 0x0 WemosD1.ino.bin`
+
+#### DOIT ESP32 devkit v1
 ![ESP32 DevKit 30-pin version pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/ESP32-DOIT-DEVKIT-V1-Board-Pinout-30-GPIOs.png)
 ![ESP32 DevKit 36-pin version pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/ESP32-DOIT-DEVKIT-V1-Board-Pinout-36-GPIOs.jpg)
 | nRF905 pin | ESP32 pin | ESP32 GPIO |
@@ -46,6 +75,9 @@ The NodeMCU doens't have enough GPIO pins for CD and AM to connect to.
 |    MISO    |    D12    |  GPIO 12   |
 |     CLK    |    D14    |  GPIO 14   |
 |     CS     |    D15    |  GPIO 15   |
+
+##### Manually flash the firmware on the DOIT ESP32 devkit v1:
+`esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 115200 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 80m --flash_size detect 0xe000 boot_app0.bin 0x1000 bootloader_dio_80m.bin 0x10000 DOIT-ESP32.ino.bin 0x8000 DOIT-ESP32.ino.partitions.bin`
 
 ## Usage
 
@@ -99,49 +131,51 @@ Example:<br>
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
 |    `reset `    |    No    | Reset the system<br>`true`: Reset system |
+|    `nvram `    |    No    | Clear the NVRAM<br>`clear`: Clear the NVRAM |
 
-## Zehnder API calls
+## Fan API calls
 
-### /api/v1/zehnder/link.json
+### /api/v2/fan/link.json
 
-Link the nRF905-API to a Zehnder device. This API call takes no parameters.
-
-Example:<br>
-` https://192.168.x.y/api/v1/zehnder/link.json`
-
-### /api/v1/zehnder/config.json
-
-Configure the Zehnder parameters.
+Link the nRF905-API to a fan device. This API call takes no parameters.
 
 Example:<br>
-`https://192.168.x.y/api/v1/zehnder/config.json?network=1a2b3c4d&main_unit_id=91&device_id=5d`
+` https://192.168.x.y/api/v2/fan/link.json`
+
+### /api/v2/fan/config.json
+
+Configure the fan parameters.
+
+Example:<br>
+`https://192.168.x.y/api/v2/fan/config.json?model=zehnder&network=1a2b3c4d&main_unit_id=91&device_id=5d`
 
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
-|   `network`    |   Yes    | Network ID of your Zehnder network |
-| `main_unit_id` |   Yes    | ID of your Zehnder main unit |
+|    `model`     |   Yes    | Fan model (Zehnder or BUVA) |
+|   `network`    |   Yes    | Network ID of your fan network |
+| `main_unit_id` |   Yes    | ID of your fan main unit |
 |  `device_id`   |   Yes    | ID of your nRF905-API |
 
-### /api/v1/zehnder/setpower.json
+### /api/v2/fan/setspeed.json
 
-Set the power level of your Zehnder device.
+Set the fan speed of your fan device.
 
 Example:<br>
-`https://192.168.x.y/api/v1/zehnder/setpower.json?power=high`
+`https://192.168.x.y/api/v2/fan/setspeed.json?speed=high`
 
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
-|    `power`     |   Yes    | Power level:<br>`low`: Low power<br>`medium`: Medium power<br>`high`: High power |
+|    `speed`     |   Yes    | Fan speed:<br>`low`: Low speed<br>`medium`: Medium speed<br>`high`: High speed<br>`max`: Maximum speed |
+|   `minutes`    |   No     | Number of minutes |
 
-### /api/v1/zehnder/settimer.json
+### /api/v2/fan/setvoltage.json
 
-Set the timer of your Zehnder device.
+Set the fan voltage of your fan device.
 
 Example:<br>
-`https://192.168.x.y/api/v1/zehnder/settimer.json?power=high&minutes=5`
+`https://192.168.x.y/api/v2/fan/setvoltage.json?voltage=2.4`
 
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
-|    `power`     |   Yes    | Power level:<br>`low`: Low power<br>`medium`: Medium power<br>`high`: High power |
-|   `minutes`    |   Yes    | Number of minutes |
+|   `voltage`    |   Yes    | Voltage:<br>`0.0`...`10.0`: Voltage; range between 0.0 volt and 10.0 volt |
 

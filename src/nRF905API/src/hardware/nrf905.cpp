@@ -3,60 +3,98 @@
   written by Eelco Huininga 2020
 */
 
-#include <cstdint>	// uint8_t, uint16_t, uint32_t
-#include "nRF905.h"
-#include "board.h"	// Board * board
+#include <cstdint>		// uint8_t, uint16_t, uint32_t
+#include "nrf905.h"
+#include "../../board.h"	// Board * board
+#include "../../nRF905API.h"	// rxISR()
 
-extern Board * board;
+#define NRF905_AFTER_WRITE_DELAY 100			// TODO Not sure if this is nessecary, but just as a precaution
+
+extern Board *		board;
+
+volatile bool		nRF905::tx_frame_done;		// TODO remove this, but somehow retransmission doesn't work correctly when this is removed
+volatile uint32_t	nRF905::tx_retransmit_count;
+volatile unsigned long	nRF905::startCDLED;		// Time when the on-board LED was turned on
 
 nRF905::nRF905(uint8_t am, uint8_t cd, uint8_t ce, uint8_t dr, uint8_t pwr, uint8_t txen, uint8_t spi_cs, uint32_t SPIFrequency) {
-	_am = am;
-	_cd = cd;
-	_ce = ce;
-	_spi_cs = spi_cs;
-	_dr = dr;
-	_pwr = pwr;
-	_txen = txen;
-	_spi_frequency = SPIFrequency;
+	this->_am = am;
+	this->_cd = cd;
+	this->_ce = ce;
+	this->_spi_cs = spi_cs;
+	this->_dr = dr;
+	this->_pwr = pwr;
+	this->_txen = txen;
+	this->_spi_frequency = SPIFrequency;
 }
 
 nRF905::~nRF905(void) {
 }
 
 bool nRF905::init(const uint32_t xtal_frequency, const uint32_t clk_out_frequency, const bool clk_out_enable) {
-	board->setPinMode(_am, INPUT);
-	board->setPinMode(_cd, INPUT);
-	board->setPinMode(_ce, OUTPUT);
-	board->setPinMode(_spi_cs, OUTPUT);
-	board->setPinMode(_dr, INPUT);
-	board->setPinMode(_pwr, OUTPUT);
-	board->setPinMode(_txen, OUTPUT);
-	board->writePin(_spi_cs, LOW);
-	board->writePin(_ce, LOW);
-	board->writePin(_pwr, HIGH);
-	board->writePin(_txen, LOW);
+	board->setPinMode(this->_am, INPUT);
+	board->setPinMode(this->_cd, INPUT);
+	board->setPinMode(this->_ce, OUTPUT);
+	board->setPinMode(this->_spi_cs, OUTPUT);
+	board->setPinMode(this->_dr, INPUT);
+	board->setPinMode(this->_pwr, OUTPUT);
+	board->setPinMode(this->_txen, OUTPUT);
+	board->writePin(this->_spi_cs, LOW);
+	this->setModeIdle();
 
 	board->SPIBegin(PIN_MISO, PIN_MOSI, PIN_SPICLK, PIN_SPICS);
 	board->SPISetDataMode(SPI_MODE0);
 	board->SPISetBitOrder(MSBFIRST);
 	board->SPISetFrequency(this->_spi_frequency);
-	board->writePin(_spi_cs, HIGH);
+	board->writePin(this->_spi_cs, HIGH);
 
-	this->setModeIdle();
-	/* Get config from NVRAM */
-	if (this->readNVRAM() == false) {
-		/* Invalid values in NVRAM; get default config from the nRF905 */
-		this->readConfigRegisters();
-		this->decodeConfigRegisters();
-	}
-
+	this->readConfigRegisters();
+	this->decodeConfigRegisters();
 	this->setXtalFrequency(xtal_frequency);
 	this->setClkOutFrequency(clk_out_frequency);
 	this->setClkOut(clk_out_enable);
 	this->encodeConfigRegisters();
 	this->writeConfigRegisters();
 
+#if PIN_CD != -1						// Only connect onboard LED to Carrier Detect when it's actually connected (on the ESP8266 boards it's not connected)
+	detachInterrupt(PIN_CD);
+//	board->attachInterrupt(PIN_CD, carrierDetectISR, RISING);
+	attachInterrupt(PIN_CD, carrierDetectISR, HIGH);
+#endif
+	this->startCDLED = 0;
+
+	return this->testSPI();
+}
+
+/* Test if we can write to the transmit address register */
+bool nRF905::testSPI(void) {
+	uint32_t	tx_address;
+
+	this->readTxAddress();			// Backup current contents of transmit address register
+	tx_address = this->_tx_address;
+
+	this->_tx_address = 0x55555555;	// Check if we can write a magic marker to the transmit address register
+	this->writeTxAddress();
+	this->readTxAddress();
+	if (this->_tx_address != 0x55555555)
+		return false;
+
+	this->_tx_address = 0xAAAAAAAA;	// Check if we can write a magic marker to the transmit address register
+	this->writeTxAddress();
+	this->readTxAddress();
+	if (this->_tx_address != 0xAAAAAAAA)
+		return false;
+
+	this->_tx_address = tx_address;	// Restore transmit address register
+	this->writeTxAddress();
+
 	return true;
+}
+
+void nRF905::update(void) {
+	if ((this->startCDLED != 0) && ((millis() - this->startCDLED) > CARRIERDETECT_LED_DELAY)) {
+		board->setOnBoardLED(false);	// Turn off on-board LED
+		this->startCDLED = 0;
+	}
 }
 
 uint8_t nRF905::getStatus(void) {
@@ -283,39 +321,75 @@ bool nRF905::setClkOutFrequency(const uint32_t frequency) {
 	return true;
 }
 
+uint8_t nRF905::getMode(void) {
+	return this->_mode;
+}
+
+void nRF905::setMode(const uint8_t mode) {
+	switch (mode) {
+		case PowerDown :
+			this->setModePowerDown();
+			break;
+
+		case Idle :
+			this->setModeIdle();
+			break;
+
+		case Receive :
+			this->setModeReceive();
+			break;
+
+		case Transmit :
+			this->setModeTransmit();
+			break;
+
+		default :
+			Serial.printf("nRF905::setMode called with invalid value %02X. Please report this to the developer\n", mode);
+			break;
+	}
+}
+
 void nRF905::setModePowerDown(void) {
-	if (_mode != PowerDown) {
-		board->writePin(_pwr, LOW);
-		board->writePin(_ce, LOW);
-		board->writePin(_txen, LOW);
-		_mode = Idle;
+	if (this->_mode != PowerDown) {
+		detachInterrupt(PIN_DR);
+		board->writePin(this->_pwr, LOW);
+		board->writePin(this->_ce, LOW);
+		board->writePin(this->_txen, LOW);
+		this->_mode = PowerDown;
 	}
 }
 
 void nRF905::setModeIdle(void) {
-	if (_mode != Idle) {
-		board->writePin(_pwr, HIGH);
-		board->writePin(_ce, LOW);
-		board->writePin(_txen, LOW);
-		_mode = Idle;
+	if (this->_mode != Idle) {
+		detachInterrupt(PIN_DR);
+		board->writePin(this->_pwr, HIGH);
+		board->writePin(this->_ce, LOW);
+		board->writePin(this->_txen, LOW);
+		this->_mode = Idle;
 	}
 }
 
 void nRF905::setModeReceive(void) {
-	if (_mode != Receive) {
-		board->writePin(_pwr, HIGH);
-		board->writePin(_ce, HIGH);
-		board->writePin(_txen, LOW);
-		_mode = Receive;
+	if (this->_mode != Receive) {
+		detachInterrupt(PIN_DR);
+		board->writePin(this->_pwr, HIGH);
+		board->writePin(this->_ce, HIGH);
+		board->writePin(this->_txen, LOW);
+		this->_mode = Receive;
+//		board->attachInterrupt(PIN_DR, rxISR, RISING);					// TODO call the attachInterrupt via the board-> class instead of a direct call
+		attachInterrupt(PIN_DR, rxISR, RISING);
 	}
 }
 
 void nRF905::setModeTransmit(void) {
-	if (_mode != Transmit) {
-		board->writePin(_pwr, HIGH);
-		board->writePin(_ce, HIGH);
-		board->writePin(_txen, HIGH);
-		_mode = Transmit;
+	if (this->_mode != Transmit) {
+		detachInterrupt(PIN_DR);
+		board->writePin(this->_pwr, HIGH);
+		board->writePin(this->_ce, HIGH);
+		board->writePin(this->_txen, HIGH);
+		this->_mode = Transmit;
+//		board->attachInterrupt(PIN_DR, txISR, RISING);					// TODO call the attachInterrupt via the board-> class instead of a direct call
+		attachInterrupt(PIN_DR, txISR, RISING);					// DR=HIGH at beginning of transmit in retrans-mode, LOW at end of transmit in retrans-mode
 	}
 }
 
@@ -341,7 +415,7 @@ void nRF905::decodeConfigRegisters(void) {
 			this->_tx_power = -10;
 			break;
 		case 0x01 :
-			this->_tx_power = -2;
+			this->_tx_power =  -2;
 			break;
 		case 0x02 :
 			this->_tx_power =   6;
@@ -381,10 +455,10 @@ void nRF905::encodeConfigRegisters(void) {
 		case -10 :
 			tx_power = 0x00;
 			break;
-		case -2 :
+		case  -2 :
 			tx_power = 0x04;
 			break;
-		case  6 :
+		case   6 :
 			tx_power = 0x08;
 			break;
 		case  10 :
@@ -417,36 +491,73 @@ void nRF905::encodeConfigRegisters(void) {
 }
 
 void nRF905::readConfigRegisters(void) {
+	uint8_t mode;
+
+	mode = this->getMode();
 	this->setModeIdle();
 	this->_config_registers.command = NRF905_COMMAND_R_CONFIG;
 	memset(this->_config_registers.config, 0, sizeof(this->_config_registers.config));
 	board->SPITransfern(this->_config_registers.buffer, sizeof(this->_config_registers.buffer));
 	this->_status = this->_config_registers.command;
+
+	Serial.printf("readConfigRegisters ");
+	for (size_t i = 0; i < sizeof(this->_config_registers.buffer); i++)
+		Serial.printf("%02X:", this->_config_registers.buffer[i]);
+	Serial.printf("\n");
+	this->setMode(mode);
 }
 
 bool nRF905::writeConfigRegisters(void) {
+	uint8_t mode;
+
+	mode = this->getMode();
+	Serial.printf("writeConfigRegisters ");
+	for (size_t i = 0; i < sizeof(this->_config_registers.buffer); i++)
+		Serial.printf("%02X:", this->_config_registers.buffer[i]);
+	Serial.printf("\n");
+
 	this->setModeIdle();
 	this->_config_registers.command = NRF905_COMMAND_W_CONFIG;
 	board->SPITransfern(this->_config_registers.buffer, sizeof(this->_config_registers.buffer));
 	this->_status = this->_config_registers.command;
+	delay(NRF905_AFTER_WRITE_DELAY);			// TODO Not sure if this is nessecary, but just as a precaution
+	this->setMode(mode);
+
 	return true;
 }
 
+void nRF905::restoreConfigRegisters(const uint8_t *buffer) {
+	memcpy(this->_config_registers.config, buffer, sizeof(this->_config_registers.config));
+}
+
+void nRF905::backupConfigRegisters(uint8_t *buffer) {
+	memcpy(buffer, this->_config_registers.config, sizeof(this->_config_registers.config));
+}
+
 void nRF905::readTxPayload(uint8_t * buffer) {
+	uint8_t mode;
+
+	mode = this->getMode();
 	this->setModeIdle();
 	this->_tx_payload.command = NRF905_COMMAND_R_TX_PAYLOAD;
 	memset(this->_tx_payload.payload, 0, sizeof(this->_tx_payload.buffer));
 	board->SPITransfern(this->_tx_payload.buffer, sizeof(this->_tx_payload.buffer));
 	memcpy(buffer, this->_tx_payload.payload, sizeof(this->_tx_payload.payload));
 	this->_status = this->_config_registers.command;
+	this->setMode(mode);
 }
 
 void nRF905::writeTxPayload(const uint8_t * buffer) {
+	uint8_t mode;
+
+	mode = this->getMode();
 	this->setModeIdle();
 	this->_tx_payload.command = NRF905_COMMAND_W_TX_PAYLOAD;
 	memcpy(this->_tx_payload.payload, buffer, sizeof(this->_tx_payload.payload));
 	board->SPITransfern(this->_tx_payload.buffer, sizeof(this->_tx_payload.buffer));
 	this->_status = this->_config_registers.command;
+	delay(NRF905_AFTER_WRITE_DELAY);			// TODO Not sure if this is nessecary, but just as a precaution
+	this->setMode(mode);
 }
 
 void nRF905::readRxPayload(uint8_t * buffer) {
@@ -461,7 +572,9 @@ void nRF905::readRxPayload(uint8_t * buffer) {
 
 void nRF905::readTxAddress(void) {
 	nRF905AddressBuffer tx_addressbuffer;
+	uint8_t mode;
 
+	mode = this->getMode();
 	this->setModeIdle();
 	tx_addressbuffer.command = NRF905_COMMAND_R_TX_ADDRESS;
 	tx_addressbuffer.address[0] = 0x00;
@@ -469,16 +582,19 @@ void nRF905::readTxAddress(void) {
 	tx_addressbuffer.address[2] = 0x00;
 	tx_addressbuffer.address[3] = 0x00;
 	board->SPITransfern(tx_addressbuffer.buffer, sizeof(tx_addressbuffer.buffer));
-	this->_tx_address  = tx_addressbuffer.address[3];
-	this->_tx_address |= (tx_addressbuffer.address[2] <<  8);
-	this->_tx_address |= (tx_addressbuffer.address[1] << 16);
-	this->_tx_address |= (tx_addressbuffer.address[0] << 24);
+	this->_tx_address  =  tx_addressbuffer.address[0];
+	this->_tx_address |= (tx_addressbuffer.address[1] <<  8);
+	this->_tx_address |= (tx_addressbuffer.address[2] << 16);
+	this->_tx_address |= (tx_addressbuffer.address[3] << 24);
 	this->_status = tx_addressbuffer.command;
+	this->setMode(mode);
 }
 
 void nRF905::writeTxAddress(void) {
 	nRF905AddressBuffer tx_addressbuffer;
+	uint8_t mode;
 
+	mode = this->getMode();
 	this->setModeIdle();
 	tx_addressbuffer.command = NRF905_COMMAND_W_TX_ADDRESS;
 	tx_addressbuffer.address[3] = (this->_tx_address >> 24) & 0xFF;
@@ -487,138 +603,82 @@ void nRF905::writeTxAddress(void) {
 	tx_addressbuffer.address[0] = (this->_tx_address      ) & 0xFF;
 	board->SPITransfern(tx_addressbuffer.buffer, sizeof(tx_addressbuffer.buffer));
 	this->_status = tx_addressbuffer.command;
+	delay(NRF905_AFTER_WRITE_DELAY);			// TODO Not sure if this is nessecary, but just as a precaution
+	this->setMode(mode);
 }
 
-void nRF905::channelConfig(void) {
-	uint8_t buffer[2];
+bool nRF905::startTx(const uint32_t retransmit, const uint8_t mode) {
+	bool		done;
+	unsigned long	startTime;
 
-	buffer[0] = NRF905_COMMAND_CHANNEL_CONFIG;
-	switch (this->_tx_power) {
-		case -10 :
-			break;
-
-		case -2  :
-			buffer[0] |= 0x04;
-			break;
-
-		case  6  :
-			buffer[0] |= 0x08;
-			break;
-
-		case  10 :
-			buffer[0] |= 0x0C;
-			break;
-
-		default :
-			break;
-	}
-	if (this->_band)
-		buffer[0] |= 0x02;
-	if (this->_channel & 0x100)
-		buffer[0] |= 0x01;
-	buffer[1] = this->_channel & 0xFF;
-
-	this->setModeIdle();
-	board->SPITransfern(buffer, sizeof(buffer));
-	this->_status = buffer[0];
-}
-
-bool nRF905::startTx(uint32_t retransmit, uint32_t timeout) {
-	unsigned long startTime;
-//	uint32_t txdelay, txnum;
-	bool done;
+	tx_retransmit_count = retransmit;
 
 	// Set or clear retransmit flag
 	if (this->getAutoRetransmit() == false) {
-		// Set retransmit flag if it wasn't set already
 		if (retransmit != 0) {
-			this->setAutoRetransmit(true);
+			this->setAutoRetransmit(true);		// Set retransmit flag if it wasn't set already
 			this->encodeConfigRegisters();
 			this->writeConfigRegisters();
 		}
-//		txdelay = retransmit;					// TODO replace txdelay with retransmit loop; DR=HIGH at beginning of transmit in retrans-mode, LOW at end of transmit in retrans-mode
 	} else {
-		// Clear retransmit flag if it wasn't cleared already
 		if (retransmit == 0) {
-			this->setAutoRetransmit(false);
+			this->setAutoRetransmit(false);	// Clear retransmit flag if it wasn't cleared already
 			this->encodeConfigRegisters();
 			this->writeConfigRegisters();
 		}
-//		txdelay = 100;						// TODO replace txdelay with wait loop; DR=HIGH after transmission
 	}
 
 	done = false;
-//	txnum = 0;
 	startTime = millis();
-	this->setModeTransmit();
-	while (((millis() - startTime) < 200) && (done == false)) {	// TODO figure out what timeout we want
-		if (board->readPin(PIN_CD) == LOW) {			// Collision detection
-			while (board->readPin(PIN_DR) != HIGH)
-				delay(1);
 
-			done = true;
+#if PIN_CD != -1							// Only check Carrier Detect when it's actually connected (on the ESP8266 boards it's not connected)
+	while (((millis() - startTime) < MAX_TRANSMIT_TIME) && (board->readPin(PIN_CD) == HIGH))	// Collision detection
+		delay(1);
+#endif
+
+	// Final collision detection before transmission
+#if PIN_CD != -1
+	if (board->readPin(PIN_CD) == LOW) {
+#endif
+		Serial.printf("Starting transmission");
+		startTime = millis();
+		this->setModeTransmit();
+		while (((millis() - startTime) < MAX_TRANSMIT_TIME) && (done == false)) {	// Wait until the complete packet is transmitted.
+			if (tx_retransmit_count == 0) {
+				done = true;
+			}
 		}
+#if PIN_CD != -1
 	}
-	this->setModeReceive();
+#endif
+
+	this->setMode(mode);				/* Stop transmission by setting nRF905 mode */
+	if (done == true)
+		Serial.printf(" - done.\n");
+	else
+		Serial.printf(" - timed out.\n");
 
 	return done;
 }
 
-bool nRF905::readNVRAM(void) {
-	size_t i;
-	nRF905NVRAMBuffer buffer;
-
-	board->ReadNVRAM((uint8_t *) &buffer, NRF905_NVRAM_OFFSET, sizeof(buffer));
-	if (buffer.signature == 0xF905) {
-		for (i = 0; i < sizeof(buffer.config); i++)
-			buffer.checksum ^= buffer.config[i];
-		for (i = 0; i < sizeof(buffer.tx_payload); i++)
-			buffer.checksum ^= buffer.tx_payload[i];
-		// TODO add tx_address in checksum
-
-		if (buffer.checksum == NRF905_NVRAM_CHECKSUM) {
-			memcpy(this->_config_registers.config, buffer.config, sizeof(buffer.config));
-			this->setModeIdle();
-			this->decodeConfigRegisters();
-			this->writeConfigRegisters();
-			this->writeTxPayload(buffer.tx_payload);
-			this->_tx_address = buffer.tx_address;
-			return true;
-		} else {
-			Serial.printf("readNVRAM: checksum failed\n");	// TODO remove this
-		}
-	} else {
-		Serial.printf("readNVRAM: signature failed\n");	// TODO remove this
-	}
-	return false;
+void IRAM_ATTR nRF905::startTxISR(void) {
+	Serial.printf(" %i", tx_retransmit_count);
+	tx_retransmit_count--;
 }
 
-void nRF905::writeNVRAM(void) {
-	size_t i;
-	nRF905NVRAMBuffer buffer;
-
-	buffer.signature = 0xF905;
-	this->setModeIdle();
-	this->readConfigRegisters();
-	this->decodeConfigRegisters();
-	memcpy(buffer.config, this->_config_registers.config, sizeof(buffer.config));
-	this->readTxPayload(buffer.tx_payload);
-	this->readTxAddress();
-	buffer.tx_address = this->_tx_address;
-
-	buffer.checksum = NRF905_NVRAM_CHECKSUM;
-	for (i = 0; i < sizeof(buffer.config); i++)
-		buffer.checksum ^= buffer.config[i];
-	for (i = 0; i < sizeof(buffer.tx_payload); i++)
-		buffer.checksum ^= buffer.tx_payload[i];
-	// TODO add tx_address in checksum
-
-	board->WriteNVRAM((uint8_t *) &buffer, NRF905_NVRAM_OFFSET, sizeof(buffer));
+void IRAM_ATTR txISR(void) {
+	nrf905->startTxISR();
 }
 
-void nRF905::clearNVRAM(void) {
-	nRF905NVRAMBuffer buffer = {0};
-
-	board->WriteNVRAM((uint8_t *) &buffer, NRF905_NVRAM_OFFSET, sizeof(buffer));
+#if PIN_CD != -1
+//void ICACHE_RAM_ATTR carrierDetectISR(void) {
+void IRAM_ATTR nRF905::carrierDetectISR(void) {
+	board->setOnBoardLED(true);	// Turn on on-board LED to signal Carrier Detect
+	startCDLED = millis();
 }
+
+void IRAM_ATTR cdISR(void) {
+	nrf905->carrierDetectISR();
+}
+#endif
 
