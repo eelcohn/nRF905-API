@@ -3,8 +3,7 @@ nRF905 Arduino API. Compatible with ESP8266 and ESP32 boards, tested on *Wemos D
 
 ## Compiling / Installing
 1. Install the [Arduino IDE](https://www.arduino.cc/en/Main/Software)
-2. Add the following libraries to Arduino IDE:
-    * ArduinoJson
+2. Optionally: add the following libraries to Arduino IDE:
     * NTPClient
 3. Open the [nRF905API.ino](https://github.com/eelcohn/nRF905-API/blob/master/src/nRF905API/nRF905API.ino) file in Arduino IDE
 4. Open [config.h](https://github.com/eelcohn/nRF905-API/blob/master/src/nRF905API/config.h) and edit the following entries:
