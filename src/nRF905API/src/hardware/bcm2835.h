@@ -1,7 +1,8 @@
-#ifndef __NRF905_ESP32_H__
-#define __NRF905_ESP32_H__
+#ifndef __BCM2835_H__
+#define __BCM2835_H__
 
-#ifdef ARDUINO_ARCH_ESP32
+#ifdef RPI
+#ifdef RPI364
 
 #include <SPI.h>	// SPIClass
 
@@ -15,11 +16,8 @@ extern WebServer server;
 #if NRF905API_MDNS == 1
 #include <ESPmDNS.h>
 #endif
-#if NRF905API_SSDP == 1
-#include <SSDP.h>
-#endif
 
-// ESP32 devboard pin definitions
+// Raspberry Pi BCM2835 pin definitions *** TODO ***
 #ifndef PIN_AM
 #define PIN_AM   32	// nRF905 AM pin (Address Match)
 #endif
@@ -53,47 +51,33 @@ extern WebServer server;
 
 class Board {
 	public:
-		const String	get_arch(void);
-		void		reset(void);
-		const String	restartReason(void);
-		const char *	getDateTime(void);
-		const uint32_t	getCPUFreqMhz(void);
-		const char *	getSdkVersion(void);
-		void		setADCtoVccMode(void);
-		const uint16_t	get_vcc(void);
-		const uint32_t	get_cpu_id(void);
-		const uint32_t	get_flash_chip_id(void);
-		const uint32_t	getFlashChipSpeed(void);
-		const bool	checkFlashCRC(void);
-		const char *	getFlashMode(void);
-		const uint32_t	get_flash_chip_real_size(void);
-		const uint32_t	getFlashChipSdkSize(void);
-		const uint32_t	getSketchSize(void);
-		const uint32_t	getFreeSketchSpace(void);
-		const String	getSketchMD5(void);
-		const uint32_t	getFreeHeap(void);
-		const uint32_t	getHeapFragmentation(void);
-		const uint32_t	getHeapMaxFreeBlockSize(void);
-		const String	get_core_version(void);
-		const uint32_t	get_core_revision(void);
+		String		get_arch(void);
+		uint16_t	get_vcc(void);
+		uint32_t	get_cpu_id(void);
+		uint32_t	get_flash_chip_id(void);
+		uint32_t	get_flash_chip_real_size(void);
+		String		get_core_version(void);
+		uint32_t	get_core_revision(void);
 		String		get_hostname(void);
 		void		set_hostname(const char *hostname);
 		String		get_localIPv6(void);
 		bool		enable_IPv6(void);
 		void		setPinMode(const uint8_t pin, const uint8_t mode);
 		void		writePin(const uint8_t pin, const uint8_t value);
-		uint8_t	readPin(const uint8_t pin);
-		void		onBoardLED(const bool value);
+		uint8_t		readPin(const uint8_t pin);
+		bool		getOnBoardLED(void);
+		void		setOnBoardLED(const bool value);
 		bool		SPIBegin(const uint8_t mosi, const uint8_t miso, const uint8_t clk, const uint8_t cs);
 		void		SPIEnd(void);
 		void		SPISetChipSelectPolarity (const uint8_t cs, const uint8_t active);
 		void		SPISetBitOrder(const uint8_t order);
 		void		SPISetDataMode(const uint8_t mode);
 		void		SPISetFrequency(const uint32_t frequency);
-		uint8_t	SPITransfer(const uint8_t out);
+		uint8_t		SPITransfer(const uint8_t out);
 		void		SPITransfern(uint8_t * buffer, const size_t size);
-		void		ReadNVRAM(uint8_t * buffer, const uint32_t offset, const size_t size);
-		void		WriteNVRAM(const uint8_t * buffer, const uint32_t offset, const size_t size);
+		void		ReadNVRAM(uint8_t * buffer, const size_t offset, const size_t size);
+		void		WriteNVRAM(const uint8_t * buffer, const size_t offset, const size_t size);
+		void		CommitNVRAM(void);
 
 	private:
 		uint32_t	_spi_frequency;
@@ -102,9 +86,12 @@ class Board {
 		uint8_t	_spi_cs;
 		uint8_t	_spi_cs_active;
 		SPIClass *	spi = NULL;
+		bool	led;
 };
 
-#endif
+#endif // RPI364
+
+#endif // RPI
 
 #endif
 
