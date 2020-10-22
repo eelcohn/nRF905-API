@@ -10,13 +10,13 @@ nRF905 Arduino API. Compatible with ESP8266 and ESP32 boards, tested on *Wemos D
 5. When the code has been uploaded the device will reboot. A WiFi access point named `nRF905` is now available. Connect to that access point with the password `nrf905api`.
 6. Open a webbrowser and go to `http://192.168.4.1/`
 7. Follow the configuration wizard:<br>
-![cfglang](https://github.com/eelcohn/nRF905-API/blob/master/images/cfglang.png)
-![cfgauth](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgauth.png)
-![cfgwifi](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgwifi.png)
-![cfgfan](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgfan.png)
-![cfgfand1](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgfand1.png)
-![cfgfand2](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgfand2.png)
-![cfgboot](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgboot.png)
+![cfglang](https://github.com/eelcohn/nRF905-API/blob/master/images/cfglang.png)<br>
+![cfgauth](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgauth.png)<br>
+![cfgwifi](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgwifi.png)<br>
+![cfgfan](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgfan.png)<br>
+![cfgfand1](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgfand1.png)<br>
+![cfgfand2](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgfand2.png)<br>
+![cfgboot](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgboot.png)<br>
 8. Your device will now connect to your WiFi network.
 
 ## Connecting the nRF905 module to your ESP8266 or ESP32 module
