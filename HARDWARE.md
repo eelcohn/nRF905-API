@@ -1,9 +1,9 @@
 # Building the hardware
 For this project you will need the following components:
-1. Any ESP8266 or ESP32 based board, like the *Wemos D1 mini Pro*, *NodeMCU 1.0 (ESP-12E module)* or the *DOIT ESP32 Dev Module*.
-2. An nRF905 module, for example the PTR8000
-3. Fourteen (14) female-to-female wires
-4. An 5V micro-USB power supply, e.g. an old micro-USB phone charger
+1. Any ESP8266 or ESP32 based board, like the [**DOIT ESP32 Dev Module**](https://docs.zerynth.com/latest/reference/boards/doit_esp32/docs/), [**Wemos D1 mini Pro**](https://docs.wemos.cc/en/latest/d1/index.html) or the [**NodeMCU 1.0 (ESP-12E module)**](https://www.nodemcu.com/).
+2. An [**nRF905 module**](https://nl.aliexpress.com/wholesale?SearchText=nrf905), for example the [**PTR8000**](https://nl.aliexpress.com/wholesale?SearchText=ptr8000)
+3. Fourteen (14) [**female-to-female wires**](https://www.tinytronics.nl/shop/nl/kabels/prototype-draden/dupont-jumper-draad-female-female-30cm-10-draden)
+4. An micro-USB power supply, e.g. an old micro-USB phone charger
 
 ## Connecting the nRF905 module to a NodeMCU 1.0 ESP12E
 ![NodeMCU pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/nodemcu_pins.png)
