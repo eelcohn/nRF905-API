@@ -1,6 +1,9 @@
 # nRF905 Arduino API
 nRF905 Arduino API. Compatible with ESP8266 and ESP32 boards, tested on *Wemos D1 mini Pro*, *NodeMCU 1.0 (ESP-12E module)* and *DOIT ESP32 Dev Module*.
 
+## Building the hardware
+See [Buiding the hardware](https://github.com/eelcohn/nRF905-API/blob/master/HARDWARE.md)
+
 ## Compiling / Installing
 1. Install the [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 2. Optionally: add the following libraries to Arduino IDE:
