@@ -151,7 +151,7 @@ Example:<br>
 
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
-|    `model`     |   Yes    | Fan model (Zehnder or BUVA) |
+|    `model`     |   Yes    | Fan model:<br>`zehnder`: Zehnder fans (868.400MHz)<br>`buva`: BUVA fans (868.200MHz) |
 |   `network`    |   Yes    | Network ID of your fan network |
 | `main_unit_id` |   Yes    | ID of your fan main unit |
 |  `device_id`   |   Yes    | ID of your nRF905-API |
