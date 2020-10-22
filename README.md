@@ -6,13 +6,11 @@ See [Buiding the hardware](https://github.com/eelcohn/nRF905-API/blob/master/HAR
 
 ## Compiling / Installing
 1. Install the [Arduino IDE](https://www.arduino.cc/en/Main/Software)
-2. Optionally: add the following libraries to Arduino IDE:
-    * NTPClient
-3. Open the [nRF905API.ino](https://github.com/eelcohn/nRF905-API/blob/master/src/nRF905API/nRF905API.ino) file in Arduino IDE
-4. Go to Sketch and select Upload
-5. When the code has been uploaded the device will reboot. A WiFi access point named `nRF905` is now available. Connect to that access point with the password `nrf905api`.
-6. Open a webbrowser and go to `http://192.168.4.1/`
-7. Follow the configuration wizard:<br>
+2. Open the [nRF905API.ino](https://github.com/eelcohn/nRF905-API/blob/master/src/nRF905API/nRF905API.ino) file in Arduino IDE
+3. Go to Sketch and select Upload
+4. When the code has been uploaded the device will reboot. A WiFi access point named `nRF905` is now available. Connect to that access point with the password `nrf905api`.
+5. Open a webbrowser and go to `http://192.168.4.1/`
+6. Follow the configuration wizard:<br>
 ![cfglang](https://github.com/eelcohn/nRF905-API/blob/master/images/cfglang.png)<br>
 ![cfgauth](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgauth.png)<br>
 ![cfgwifi](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgwifi.png)<br>
@@ -20,8 +18,7 @@ See [Buiding the hardware](https://github.com/eelcohn/nRF905-API/blob/master/HAR
 ![cfgfand1](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgfand1.png)<br>
 ![cfgfand2](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgfand2.png)<br>
 ![cfgboot](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgboot.png)<br>
-8. Your device will now connect to your WiFi network.
-
+7. Your device will now connect to your WiFi network.
 
 ## Usage
 
@@ -133,4 +130,3 @@ Example:<br>
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
 |  `device_id`   |   No     | Device ID:<br>ID of a fan device. By default it will select the fan it's linked to |
-
