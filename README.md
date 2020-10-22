@@ -188,5 +188,5 @@ Example:<br>
 
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
-|   device_id`   |   No     | Device ID:<br>ID of a fan device. By default it will select the fan it's linked to |
+|  `device_id`   |   No     | Device ID:<br>ID of a fan device. By default it will select the fan it's linked to |
 
