@@ -47,20 +47,23 @@ Example:<br>
 |    `rxaddr`    |    No    | Set the Rx address<br>`0x12345678`: Set Rx address to 0x12345678 |
 |    `nvram`     |    No    | Store the nRF905 configuration in NVRAM<br>`true`: Store nRF905 config in NVRAM<br>`false`: Do not store nRF905 config in NVRAM |
 
-### /api/v1/receive.json
-This will return a list of received data frames by the nRF905. This API call takes no parameters.
-
 ### /api/v1/status.json
 This will show a status page with details about the hardware. This API call takes no parameters.
 
 Example:<br>
-`https://192.168.x.y/api/v1/status.json`
+`http://192.168.x.y/api/v1/status.json`
+
+### /api/v1/receive.json
+This will return a list of received data frames by the nRF905. This API call takes no parameters.
+
+Example:<br>
+`http://192.168.x.y/api/v1/receive.json`
 
 ### /api/v1/send.json
 This will transmit data. After the data has been transmitted, the API will wait for data to be received (a reply to the transmitted data). By default it will wait for 2 seconds, but you can change this by adding the `timeout` parameter.
 
 Example:<br>
-`https://192.168.x.y/api/v1/send.json?addr=aabbccdd&payload=0400035efa0c04a55a5aa50000000000&timeout=10`
+`http://192.168.x.y/api/v1/send.json?addr=aabbccdd&payload=0400035efa0c04a55a5aa50000000000&timeout=10`
 
 | Parameter | Required | Description |
 |:---------:|:--------:|:------------|
@@ -72,7 +75,7 @@ Example:<br>
 Configure the system board.
 
 Example:<br>
-`https://192.168.x.y/api/v1/systemconfig.json?reset=true`
+`http://192.168.x.y/api/v1/systemconfig.json?reset=true`
 
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
@@ -86,14 +89,14 @@ Example:<br>
 Link the nRF905-API to a fan device. This API call takes no parameters.
 
 Example:<br>
-` https://192.168.x.y/api/v2/fan/link.json`
+`http://192.168.x.y/api/v2/fan/link.json`
 
 ### /api/v2/fan/config.json
 
 Configure the fan parameters.
 
 Example:<br>
-`https://192.168.x.y/api/v2/fan/config.json?model=zehnder&network=1a2b3c4d&main_unit_id=91&device_id=5d`
+`http://192.168.x.y/api/v2/fan/config.json?model=zehnder&network=1a2b3c4d&main_unit_id=91&device_id=5d`
 
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
@@ -107,7 +110,7 @@ Example:<br>
 Set the fan speed of your fan device.
 
 Example:<br>
-`https://192.168.x.y/api/v2/fan/setspeed.json?speed=high`
+`http://192.168.x.y/api/v2/fan/setspeed.json?speed=high`
 
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
@@ -119,7 +122,7 @@ Example:<br>
 Set the fan voltage of your fan device.
 
 Example:<br>
-`https://192.168.x.y/api/v2/fan/setvoltage.json?voltage=2.4`
+`http://192.168.x.y/api/v2/fan/setvoltage.json?voltage=2.4`
 
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
@@ -130,7 +133,7 @@ Example:<br>
 Query a device for it's current settings (this API endpoint is not yet finished and is in test-mode).
 
 Example:<br>
-`https://192.168.x.y/api/test/fan/querydevice.json?device_id=32`
+`http://192.168.x.y/api/test/fan/querydevice.json?device_id=32`
 
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
