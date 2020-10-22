@@ -7,10 +7,15 @@ See [Buiding the hardware](https://github.com/eelcohn/nRF905-API/blob/master/HAR
 ## Compiling / Installing
 1. Install the [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 2. Open the [nRF905API.ino](https://github.com/eelcohn/nRF905-API/blob/master/src/nRF905API/nRF905API.ino) file in Arduino IDE
-3. Go to Sketch and select Upload
-4. When the code has been uploaded the device will reboot. A WiFi access point named `nRF905` is now available. Connect to that access point with the password `nrf905api`.
-5. Open a webbrowser and go to `http://192.168.4.1/`
-6. Follow the configuration wizard:<br>
+3. In the *File* menu select *Preferences* and add the following to *Additional Board Manager URLs*:
+```
+https://arduino.esp8266.com/stable/package_esp8266com_index.json,https://dl.espressif.com/dl/package_esp32_index.json
+```
+4. In the *Sketch* menu select *Board* and find the board you are using (DO-IT ESP32 / Wemos / NodeMCU etc).
+5. In the *Sketch* menu select *Upload*
+6. When the code has been uploaded the device will reboot and start a WiFi access point named `nRF905`. Connect to that access point with the password `nrf905api`.
+7. Open a webbrowser and go to `http://192.168.4.1/`
+8. Follow the configuration wizard:<br>
 ![cfglang](https://github.com/eelcohn/nRF905-API/blob/master/images/cfglang.png)<br>
 ![cfgauth](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgauth.png)<br>
 ![cfgwifi](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgwifi.png)<br>
@@ -18,7 +23,7 @@ See [Buiding the hardware](https://github.com/eelcohn/nRF905-API/blob/master/HAR
 ![cfgfand1](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgfand1.png)<br>
 ![cfgfand2](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgfand2.png)<br>
 ![cfgboot](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgboot.png)<br>
-7. Your device will now connect to your WiFi network.
+9. Your device will now connect to your WiFi network.
 
 ## Usage
 
