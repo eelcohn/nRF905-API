@@ -5,9 +5,7 @@ For this project you will need the following components:
 3. Fourteen (14) female-to-female wires
 4. An 5V micro-USB power supply, e.g. an old micro-USB phone charger
 
-## Connecting the nRF905 module to your ESP8266 or ESP32 module
-
-#### NodeMCU 1.0 ESP12E
+## Connecting the nRF905 module to a NodeMCU 1.0 ESP12E
 ![NodeMCU pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/nodemcu_pins.png)
 | nRF905 pin | NodeMCU pin | NodeMCU GPIO |
 |:----------:|:-----------:|:------------:|
@@ -29,7 +27,7 @@ The NodeMCU doens't have enough GPIO pins for CD and AM to connect to.
 ##### Manually flash the firmware to the ESP8266 NodeMCU :
 `esptool.py --chip esp8266 --port /dev/ttyUSB0 --baud 115200 --before default_reset --after hard_reset write_flash 0x0 nRF905API.ino.bin`
 
-#### Wemos D1 mini / Wemos D1 mini pro
+## Connecting the nRF905 module to a Wemos D1 mini / Wemos D1 mini pro
 ![Wemos D1 mini pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/Wemos-D1-mini.png)
 | nRF905 pin | Wemos D1 pin | Wemos D1 GPIO |
 |:----------:|:------------:|:-------------:|
@@ -51,7 +49,7 @@ The Wemos D1 mini doens't have enough GPIO pins for CD and AM to connect to.
 ##### Manually flash the firmware on the Wemos D1 mini:
 `esptool.py --chip esp8266 --port /dev/ttyUSB0 --baud 921600 --before default_reset --after hard_reset write_flash 0x0 WemosD1.ino.bin`
 
-#### DOIT ESP32 devkit v1
+## Connecting the nRF905 module to a DOIT ESP32 devkit v1
 ![ESP32 DevKit 30-pin version pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/ESP32-DOIT-DEVKIT-V1-Board-Pinout-30-GPIOs.png)
 ![ESP32 DevKit 36-pin version pinout](https://github.com/eelcohn/nRF905-API/blob/master/images/ESP32-DOIT-DEVKIT-V1-Board-Pinout-36-GPIOs.jpg)
 | nRF905 pin | ESP32 pin | ESP32 GPIO |
