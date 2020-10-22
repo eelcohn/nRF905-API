@@ -179,3 +179,14 @@ Example:<br>
 |:--------------:|:--------:|:------------|
 |   `voltage`    |   Yes    | Voltage:<br>`0.0`...`10.0`: Voltage; range between 0.0 volt and 10.0 volt |
 
+### /api/test/fan/querydevice.json
+
+Query a device for it's current settings (this API endpoint is not yet finished and is in test-mode).
+
+Example:<br>
+`https://192.168.x.y/api/test/fan/querydevice.json?device_id=32`
+
+|  Parameter     | Required | Description |
+|:--------------:|:--------:|:------------|
+|   device_id`   |   No     | Device ID:<br>ID of a fan device. By default it will select the fan it's linked to |
+
