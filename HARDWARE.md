@@ -1,7 +1,7 @@
 # Building the hardware
 For this project you will need the following components:
 1. A [Zehnder or BUVA Comfofan CMFe fan unit](https://github.com/eelcohn/ZehnderComfoair/blob/master/images/fan_comfofan_s.png) fitted with a [RF module](https://github.com/eelcohn/ZehnderComfoair/blob/master/images/rf_module.jpg)
-2. Any ESP8266 or ESP32 based board, like the [**DOIT ESP32 Dev Module**](https://docs.zerynth.com/latest/reference/boards/doit_esp32/docs/), [**Wemos D1 mini Pro**](https://docs.wemos.cc/en/latest/d1/index.html) or the [**NodeMCU 1.0 (ESP-12E module)**](https://www.nodemcu.com/).
+2. Any ESP8266 or ESP32 based Arduino board, like the [**DOIT ESP32 Dev Module**](https://docs.zerynth.com/latest/reference/boards/doit_esp32/docs/), [**Wemos D1 mini Pro**](https://docs.wemos.cc/en/latest/d1/index.html) or the [**NodeMCU 1.0 (ESP-12E module)**](https://www.nodemcu.com/).
 3. An [**nRF905 module**](https://nl.aliexpress.com/wholesale?SearchText=nrf905), for example the [**PTR8000**](https://nl.aliexpress.com/wholesale?SearchText=ptr8000)
 4. Fourteen (14) [**female-to-female wires**](https://www.tinytronics.nl/shop/nl/kabels/prototype-draden/dupont-jumper-draad-female-female-30cm-10-draden)
 5. An micro-USB power supply, e.g. an old micro-USB phone charger
