@@ -21,8 +21,8 @@ For this project you will need the following components:
 |    TX_EN   |    D25    |  GPIO 25   |
 |    MOSI    |    D13    |  GPIO 13   |
 |    MISO    |    D12    |  GPIO 12   |
-|     CLK    |    D14    |  GPIO 14   |
-|     CS     |    D15    |  GPIO 15   |
+| CLK or SCK |    D14    |  GPIO 14   |
+|  CS or SCN |    D15    |  GPIO 15   |
 
 ##### Manually flash the firmware on the DOIT ESP32 devkit v1:
 `esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 115200 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 80m --flash_size detect 0xe000 boot_app0.bin 0x1000 bootloader_dio_80m.bin 0x10000 DOIT-ESP32.ino.bin 0x8000 DOIT-ESP32.ino.partitions.bin`
@@ -41,8 +41,8 @@ For this project you will need the following components:
 |    TX_EN   |      D0      |    GPIO 16    |
 |    MOSI    | D7 / HMOSI   |    GPIO 13    |
 |    MISO    | D6 / HMISO   |    GPIO 12    |
-|     CLK    | D5 / HCLK    |    GPIO 14    |
-|     CS     | D8 / HCS     |    GPIO 15    |
+| CLK or SCK | D5 / HCLK    |    GPIO 14    |
+|  CS or CSN | D8 / HCS     |    GPIO 15    |
 
 The Wemos D1 mini doens't have enough GPIO pins for CD and AM to connect to.
 
@@ -63,8 +63,8 @@ The Wemos D1 mini doens't have enough GPIO pins for CD and AM to connect to.
 |    TX_EN   |      D0     |    GPIO 16   |
 |    MOSI    | D7 / HMOSI  |    GPIO 13   |
 |    MISO    | D6 / HMISO  |    GPIO 12   |
-|     CLK    | D5 / HCLK   |    GPIO 14   |
-|     CS     | D8 / HCS    |    GPIO 15   |
+| CLK or SCK | D5 / HCLK   |    GPIO 14   |
+|  CS or CSN | D8 / HCS    |    GPIO 15   |
 
 The NodeMCU doens't have enough GPIO pins for CD and AM to connect to.
 
