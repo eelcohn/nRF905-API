@@ -63,7 +63,7 @@ Example:<br>
 This will transmit data. After the data has been transmitted, the API will wait for data to be received (a reply to the transmitted data). By default it will wait for 2 seconds, but you can change this by adding the `timeout` parameter.
 
 Example:<br>
-`http://192.168.x.y/api/v1/send.json?addr=aabbccdd&payload=0400035efa0c04a55a5aa50000000000&timeout=10`
+`http://192.168.x.y/api/v1/send.json?txaddr=aabbccdd&payload=0400035efa0c04a55a5aa50000000000&timeout=10`
 
 | Parameter | Required | Description |
 |:---------:|:--------:|:------------|
