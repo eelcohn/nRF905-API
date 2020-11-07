@@ -22,7 +22,7 @@ For this project you will need the following components:
 |    MOSI    |    D13    |  GPIO 13   |
 |    MISO    |    D12    |  GPIO 12   |
 | CLK or SCK |    D14    |  GPIO 14   |
-|  CS or SCN |    D15    |  GPIO 15   |
+|  CS or CSN |    D15    |  GPIO 15   |
 
 ##### Manually flash the firmware on the DOIT ESP32 devkit v1:
 `esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 115200 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 80m --flash_size detect 0xe000 boot_app0.bin 0x1000 bootloader_dio_80m.bin 0x10000 DOIT-ESP32.ino.bin 0x8000 DOIT-ESP32.ino.partitions.bin`
