@@ -115,7 +115,7 @@ Example:<br>
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
 |    `speed`     |   Yes    | Fan speed:<br>`low`: Low speed<br>`medium`: Medium speed<br>`high`: High speed<br>`max`: Maximum speed |
-|   `minutes`    |   No     | Number of minutes |
+|    `timer`     |   No     | Set the fan timer (number of minutes) |
 
 ### /api/v2/fan/setvoltage.json
 
