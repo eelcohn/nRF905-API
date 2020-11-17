@@ -26,15 +26,15 @@ The above commands do not work (correctly) in combination with a C02 sensor. Ins
 ```
 ventilation_status: 'http://192.168.1.249/api/test/fan/querydevice.json'
 
-ventilation_10_mins: 'http://192.168.x.y/api/v1/send.json?txaddr=c9815c4e&payload=0100164ffa0302040a00000000000000&timeout=10'
-ventilation_30_mins: 'http://192.168.x.y/api/v1/send.json?txaddr=c9815c4e&payload=0100164ffa0302041e00000000000000&timeout=10"
-ventilation_60_mins: 'http://192.168.x.y/api/v1/send.json?txaddr=c9815c4e&payload=0100164ffa0302043c00000000000000&timeout=10'
+ventilation_turn_on_max_10_mins: 'http://192.168.x.y/api/v1/send.json?txaddr=c9815c4e&payload=0100164ffa0302040a00000000000000&timeout=10'
+ventilation_turn_on_max_30_mins: 'http://192.168.x.y/api/v1/send.json?txaddr=c9815c4e&payload=0100164ffa0302041e00000000000000&timeout=10"
+ventilation_turn_on_max_60_mins: 'http://192.168.x.y/api/v1/send.json?txaddr=c9815c4e&payload=0100164ffa0302043c00000000000000&timeout=10'
 ventilation_auto: 'http://192.168.x.y/api/v1/send.json?txaddr=c9815c4e&payload=0100164ffa0302010000000000000000&timeout=10'
 ventilation_user: admin
 ventilation_pass: nrf905
 ```
 
-Depending on existince of a CO2 sensor add the commands to your configuration
+Depending on existince of a CO2 sensor add the rest commands of your choice to your configuration
 
 #### In configuration.yaml::
 ```
@@ -48,7 +48,7 @@ rest_command:
     username: !secret ventilation_user
     password: !secret ventilation_pass
   ventilationsystem_medium_30mins:
-    url: !secret ventilation_turn_on_medium_for_30mins
+    url: !secret ventilation_turn_on_medium_30mins
     username: !secret ventilation_user
     password: !secret ventilation_pass
 ```
