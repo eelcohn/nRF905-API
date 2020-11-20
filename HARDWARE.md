@@ -2,7 +2,11 @@
 For this project you will need the following components:
 1. A [Zehnder or BUVA Comfofan CMFe fan unit](https://github.com/eelcohn/ZehnderComfoair/blob/master/images/fan_comfofan_s.png) fitted with a [RF module](https://github.com/eelcohn/ZehnderComfoair/blob/master/images/rf_module.jpg)
 2. Any ESP8266 or ESP32 based Arduino board, like the [DOIT ESP32 Dev Module](https://docs.zerynth.com/latest/reference/boards/doit_esp32/docs/), [Wemos D1 mini Pro](https://docs.wemos.cc/en/latest/d1/index.html) or the [NodeMCU 1.0 (ESP-12E module)](https://www.nodemcu.com/).
-3. An [nRF905 module](https://nl.aliexpress.com/wholesale?SearchText=nrf905), for example the [PTR8000](https://nl.aliexpress.com/wholesale?SearchText=ptr8000)
+3. An nRF905 module. Some commonly available modules:
+* [The Taidacent module](https://www.alibaba.com/product-detail/Taidacent-2-FSK-GFSK-and-MSK_1852258531.html?spm=a2700.galleryofferlist.normal_offer.d_title.cf2b113dTJRiCk) - I haven't tested this module yet, but it seems to be designed for the 868/915 MHZ band, and should give you a range of 100-300 meters
+* [The PTR8000](https://nl.aliexpress.com/wholesale?SearchText=ptr8000) - warning! Although this module is sold as suitable for 433/868/915 MHz frequencies, the hardware is designed for 433MHz only. You CAN use this module for the nRF905-API, but range will be limited to 1-2 meters (3-6 feet)
+* [The goodluckbuy module](https://www.goodluckbuy.com/nrf905-rf-915m-wireless-transceiver-module-170-channels-100dbm-10mw-spi-idp.html
+)- I haven't tested this module yet, but it seems to be designed for the 868/915 MHZ band, and should give you a range of 100-300 meters EDIT: this site seems to be offline/defaced 
 4. Fourteen (14) [Dupont female-to-female wires](https://www.tinytronics.nl/shop/nl/kabels/prototype-draden/dupont-jumper-draad-female-female-30cm-10-draden)
 5. An micro-USB power supply, e.g. an old micro-USB phone charger
 
