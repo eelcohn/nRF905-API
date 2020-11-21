@@ -5,7 +5,7 @@ Full home assistant integration isn't ready yet, but freakshock88 has found a wa
 
 #### In secrets.yaml:
 ```
-ventilation_status: 'http://192.168.1.249/api/test/fan/querydevice.json'
+ventilation_status: 'http://192.168.x.y/api/test/fan/querydevice.json'
 
 ventilation_turn_on_low: 'http://192.168.x.y/api/v2/fan/setspeed.json?speed=low'
 ventilation_turn_on_medium: 'http://192.168.x.y/api/v2/fan/setspeed.json?speed=medium'
@@ -24,7 +24,7 @@ ventilation_pass: nrf905
 The above commands do not work (correctly) in combination with a C02 sensor. Instead of that use the parameters below:
 
 ```
-ventilation_status: 'http://192.168.1.249/api/test/fan/querydevice.json'
+ventilation_status: 'http://192.168.x.y/api/test/fan/querydevice.json'
 
 ventilation_turn_on_max_10_mins: 'http://192.168.x.y/api/v1/send.json?txaddr=c9815c4e&payload=0100164ffa0302040a00000000000000&timeout=10'
 ventilation_turn_on_max_30_mins: 'http://192.168.x.y/api/v1/send.json?txaddr=c9815c4e&payload=0100164ffa0302041e00000000000000&timeout=10"
