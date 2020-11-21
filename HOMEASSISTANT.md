@@ -48,7 +48,7 @@ rest_command:
     username: !secret ventilation_user
     password: !secret ventilation_pass
   ventilationsystem_medium_30mins:
-    url: !secret ventilation_turn_on_medium_30mins
+    url: !secret ventilation_turn_on_medium_30_mins
     username: !secret ventilation_user
     password: !secret ventilation_pass
 ```
