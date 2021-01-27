@@ -11,7 +11,7 @@ See [Buiding the hardware](https://github.com/eelcohn/nRF905-API/blob/master/HAR
 ```
 https://arduino.esp8266.com/stable/package_esp8266com_index.json,https://dl.espressif.com/dl/package_esp32_index.json
 ```
-4. In the *Sketch* menu select *Board* and find the board you are using (DO-IT ESP32 / Wemos / NodeMCU etc).
+4. In the *Tools* menu select *Board* and find the board you are using (DO-IT ESP32 / Wemos / NodeMCU etc).
 5. In the *Sketch* menu select *Upload*
 6. When the code has been uploaded the device will reboot and start a WiFi access point named `nRF905`. Connect to that access point with the password `nrf905api`.
 7. Open a webbrowser and go to `http://192.168.4.1/`
