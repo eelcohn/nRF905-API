@@ -1,0 +1,801 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L nrf905:nRF905 IC1
+U 1 1 5F978D08
+P 3850 2900
+F 0 "IC1" H 3850 4031 50  0000 C CNN
+F 1 "nRF905" H 3850 3940 50  0000 C CNN
+F 2 "Package_DFN_QFN:TQFN-32-1EP_5x5mm_P0.5mm_EP2.1x2.1mm_ThermalVias" H 4050 3850 50  0001 L CIN
+F 3 "https://infocenter.nordicsemi.com/pdf/nRF905_PS_v1.5.pdf" H 3850 3000 50  0001 C CNN
+	1    3850 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0101
+U 1 1 5F97B992
+P 3900 4600
+F 0 "#PWR0101" H 3900 4350 50  0001 C CNN
+F 1 "GND" H 3905 4427 50  0000 C CNN
+F 2 "" H 3900 4600 50  0001 C CNN
+F 3 "" H 3900 4600 50  0001 C CNN
+	1    3900 4600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3400 3850 3400 4000
+Wire Wire Line
+	3400 4000 3500 4000
+Wire Wire Line
+	4400 4000 4400 3850
+Wire Wire Line
+	4300 3850 4300 4000
+Connection ~ 4300 4000
+Wire Wire Line
+	4300 4000 4400 4000
+Wire Wire Line
+	4200 3850 4200 4000
+Connection ~ 4200 4000
+Wire Wire Line
+	4200 4000 4300 4000
+Wire Wire Line
+	4100 3850 4100 4000
+Connection ~ 4100 4000
+Wire Wire Line
+	4100 4000 4200 4000
+Wire Wire Line
+	4000 3850 4000 4000
+Connection ~ 4000 4000
+Wire Wire Line
+	4000 4000 4100 4000
+Wire Wire Line
+	3900 3850 3900 4000
+Connection ~ 3900 4000
+Wire Wire Line
+	3900 4000 4000 4000
+Wire Wire Line
+	3800 3850 3800 4000
+Connection ~ 3800 4000
+Wire Wire Line
+	3800 4000 3900 4000
+Wire Wire Line
+	3700 3850 3700 4000
+Connection ~ 3700 4000
+Wire Wire Line
+	3700 4000 3800 4000
+Wire Wire Line
+	3600 3850 3600 4000
+Connection ~ 3600 4000
+Wire Wire Line
+	3600 4000 3700 4000
+Wire Wire Line
+	3500 3850 3500 4000
+Connection ~ 3500 4000
+Wire Wire Line
+	3500 4000 3600 4000
+$Comp
+L power:VDD #PWR0102
+U 1 1 5F981101
+P 3600 1650
+F 0 "#PWR0102" H 3600 1500 50  0001 C CNN
+F 1 "VDD" H 3615 1823 50  0000 C CNN
+F 2 "" H 3600 1650 50  0001 C CNN
+F 3 "" H 3600 1650 50  0001 C CNN
+	1    3600 1650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3600 1950 3600 1800
+Wire Wire Line
+	3600 1800 3700 1800
+Wire Wire Line
+	3700 1800 3700 1950
+Wire Wire Line
+	3600 1800 3500 1800
+Wire Wire Line
+	3500 1800 3500 1950
+Connection ~ 3600 1800
+Wire Wire Line
+	3600 1650 3600 1800
+$Comp
+L power:GND #PWR0103
+U 1 1 5F984372
+P 4250 1850
+F 0 "#PWR0103" H 4250 1600 50  0001 C CNN
+F 1 "GND" H 4255 1677 50  0000 C CNN
+F 2 "" H 4250 1850 50  0001 C CNN
+F 3 "" H 4250 1850 50  0001 C CNN
+	1    4250 1850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 5F986596
+P 4800 3950
+F 0 "R2" H 4870 3996 50  0000 L CNN
+F 1 "22k" H 4870 3905 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4730 3950 50  0001 C CNN
+F 3 "~" H 4800 3950 50  0001 C CNN
+F 4 "0.1W" H 4800 3950 50  0001 C CNN "Power Rating"
+F 5 "±1%" H 4800 3950 50  0001 C CNN "Tolerance"
+	1    4800 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 5F986F0E
+P 5400 3950
+F 0 "R1" V 5193 3950 50  0000 C CNN
+F 1 "1M" V 5284 3950 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 5330 3950 50  0001 C CNN
+F 3 "~" H 5400 3950 50  0001 C CNN
+F 4 "0.1W" V 5400 3950 50  0001 C CNN "Power Rating"
+F 5 "±5%" V 5400 3950 50  0001 C CNN "Tolerance"
+	1    5400 3950
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:Crystal X1
+U 1 1 5F9882A2
+P 5400 3550
+F 0 "X1" H 5400 3818 50  0000 C CNN
+F 1 "16MHz" H 5400 3727 50  0000 C CNN
+F 2 "Crystal:Crystal_HC49-4H_Vertical" H 5400 3550 50  0001 C CNN
+F 3 "~" H 5400 3550 50  0001 C CNN
+F 4 "12pF" H 5400 3550 50  0001 C CNN "Load Capacitance"
+	1    5400 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C1
+U 1 1 5F9890F9
+P 5150 4250
+F 0 "C1" H 5265 4296 50  0000 L CNN
+F 1 "22pF " H 5265 4205 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 5188 4100 50  0001 C CNN
+F 3 "~" H 5150 4250 50  0001 C CNN
+F 4 "±5%" H 5150 4250 50  0001 C CNN "Tolerance"
+F 5 "NP0 ceramic chip capacitor" H 5150 4250 50  0001 C CNN "Type"
+	1    5150 4250
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 5F98A259
+P 5650 4250
+F 0 "C2" H 5765 4296 50  0000 L CNN
+F 1 "22pF" H 5765 4205 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 5688 4100 50  0001 C CNN
+F 3 "~" H 5650 4250 50  0001 C CNN
+F 4 "±5%" H 5650 4250 50  0001 C CNN "Tolerance"
+F 5 "NP0 ceramic chip capacitor" H 5650 4250 50  0001 C CNN "Type"
+	1    5650 4250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4650 3400 4800 3400
+$Comp
+L power:GND #PWR0104
+U 1 1 5F98B17B
+P 4800 4600
+F 0 "#PWR0104" H 4800 4350 50  0001 C CNN
+F 1 "GND" H 4805 4427 50  0000 C CNN
+F 2 "" H 4800 4600 50  0001 C CNN
+F 3 "" H 4800 4600 50  0001 C CNN
+	1    4800 4600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0105
+U 1 1 5F98BDA3
+P 5150 4600
+F 0 "#PWR0105" H 5150 4350 50  0001 C CNN
+F 1 "GND" H 5155 4427 50  0000 C CNN
+F 2 "" H 5150 4600 50  0001 C CNN
+F 3 "" H 5150 4600 50  0001 C CNN
+	1    5150 4600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0106
+U 1 1 5F98C423
+P 5650 4600
+F 0 "#PWR0106" H 5650 4350 50  0001 C CNN
+F 1 "GND" H 5655 4427 50  0000 C CNN
+F 2 "" H 5650 4600 50  0001 C CNN
+F 3 "" H 5650 4600 50  0001 C CNN
+	1    5650 4600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5150 4400 5150 4600
+Wire Wire Line
+	5650 4400 5650 4600
+Wire Wire Line
+	5650 3550 5550 3550
+Wire Wire Line
+	5650 3550 5650 3950
+Wire Wire Line
+	5550 3950 5650 3950
+Connection ~ 5650 3950
+Wire Wire Line
+	5650 3950 5650 4100
+Wire Wire Line
+	5150 4100 5150 3950
+Wire Wire Line
+	5150 3550 5250 3550
+Wire Wire Line
+	5250 3950 5150 3950
+Connection ~ 5150 3950
+Wire Wire Line
+	5150 3950 5150 3550
+Wire Wire Line
+	4650 3150 5150 3150
+Wire Wire Line
+	5150 3150 5150 3550
+Connection ~ 5150 3550
+Wire Wire Line
+	4650 3000 5650 3000
+Wire Wire Line
+	5650 3000 5650 3550
+Connection ~ 5650 3550
+Wire Wire Line
+	4800 3400 4800 3800
+Wire Wire Line
+	4800 4100 4800 4600
+Wire Wire Line
+	3900 4000 3900 4600
+$Comp
+L Device:C C7
+U 1 1 5F9AA4CA
+P 4250 1550
+F 0 "C7" H 4365 1596 50  0000 L CNN
+F 1 "10nF" H 4365 1505 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 4288 1400 50  0001 C CNN
+F 3 "~" H 4250 1550 50  0001 C CNN
+F 4 "±5%" H 4250 1550 50  0001 C CNN "Tolerance"
+F 5 "X7R ceramic chip capacitor" H 4250 1550 50  0001 C CNN "Type"
+	1    4250 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C4
+U 1 1 5F9AC12C
+P 6350 4300
+F 0 "C4" H 6465 4346 50  0000 L CNN
+F 1 "3.3nF" H 6465 4255 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 6388 4150 50  0001 C CNN
+F 3 "~" H 6350 4300 50  0001 C CNN
+F 4 "±5%" H 6350 4300 50  0001 C CNN "Tolerance"
+F 5 "X7R ceramic chip capacitor" H 6350 4300 50  0001 C CNN "Type"
+	1    6350 4300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4250 1850 4250 1700
+Wire Wire Line
+	4250 1400 4250 1250
+Wire Wire Line
+	4250 1250 4000 1250
+Wire Wire Line
+	4000 1250 4000 1950
+$Comp
+L power:GND #PWR0107
+U 1 1 5F9BA67F
+P 6350 4650
+F 0 "#PWR0107" H 6350 4400 50  0001 C CNN
+F 1 "GND" H 6355 4477 50  0000 C CNN
+F 2 "" H 6350 4650 50  0001 C CNN
+F 3 "" H 6350 4650 50  0001 C CNN
+	1    6350 4650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6350 4450 6350 4650
+Wire Wire Line
+	4650 2350 6350 2350
+$Comp
+L power:GND #PWR0113
+U 1 1 5FA412E3
+P 2950 6900
+F 0 "#PWR0113" H 2950 6650 50  0001 C CNN
+F 1 "GND" H 2955 6727 50  0000 C CNN
+F 2 "" H 2950 6900 50  0001 C CNN
+F 3 "" H 2950 6900 50  0001 C CNN
+	1    2950 6900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VDD #PWR0114
+U 1 1 5FA416BB
+P 2950 5800
+F 0 "#PWR0114" H 2950 5650 50  0001 C CNN
+F 1 "VDD" H 2965 5973 50  0000 C CNN
+F 2 "" H 2950 5800 50  0001 C CNN
+F 3 "" H 2950 5800 50  0001 C CNN
+	1    2950 5800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C8
+U 1 1 5FA4308D
+P 3550 6350
+F 0 "C8" H 3665 6396 50  0000 L CNN
+F 1 "33pF" H 3665 6305 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3588 6200 50  0001 C CNN
+F 3 "~" H 3550 6350 50  0001 C CNN
+F 4 "±5%" H 3550 6350 50  0001 C CNN "Tolerance"
+F 5 "NP0 ceramic chip capacitor" H 3550 6350 50  0001 C CNN "Type"
+	1    3550 6350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C6
+U 1 1 5FA43348
+P 2950 6350
+F 0 "C6" H 3065 6396 50  0000 L CNN
+F 1 "4.7nF" H 3065 6305 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 2988 6200 50  0001 C CNN
+F 3 "~" H 2950 6350 50  0001 C CNN
+F 4 "±5%" H 2950 6350 50  0001 C CNN "Tolerance"
+F 5 "X7R ceramic chip capacitor" H 2950 6350 50  0001 C CNN "Type"
+	1    2950 6350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C5
+U 1 1 5FA43631
+P 2350 6350
+F 0 "C5" H 2465 6396 50  0000 L CNN
+F 1 "33pF" H 2465 6305 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 2388 6200 50  0001 C CNN
+F 3 "~" H 2350 6350 50  0001 C CNN
+F 4 "±5%" H 2350 6350 50  0001 C CNN "Tolerance"
+F 5 "NP0 ceramic chip capacitor" H 2350 6350 50  0001 C CNN "Type"
+	1    2350 6350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2350 6500 2350 6700
+Wire Wire Line
+	3550 6700 3550 6500
+Wire Wire Line
+	2350 6200 2350 6000
+Wire Wire Line
+	3550 6000 3550 6200
+Wire Wire Line
+	2950 5800 2950 6000
+Connection ~ 2950 6000
+Wire Wire Line
+	2950 6700 2950 6900
+Connection ~ 2950 6700
+Wire Wire Line
+	2950 6000 3550 6000
+Wire Wire Line
+	2950 6700 3550 6700
+Wire Wire Line
+	2350 6000 2950 6000
+Wire Wire Line
+	2350 6700 2950 6700
+Wire Wire Line
+	2950 6000 2950 6200
+Wire Wire Line
+	2950 6500 2950 6700
+Wire Wire Line
+	950  2750 950  2500
+Wire Wire Line
+	1200 2750 950  2750
+$Comp
+L power:VDD #PWR0115
+U 1 1 5F97E87B
+P 950 2500
+F 0 "#PWR0115" H 950 2350 50  0001 C CNN
+F 1 "VDD" H 965 2673 50  0000 C CNN
+F 2 "" H 950 2500 50  0001 C CNN
+F 3 "" H 950 2500 50  0001 C CNN
+	1    950  2500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0116
+U 1 1 5F9722AE
+P 1950 3800
+F 0 "#PWR0116" H 1950 3550 50  0001 C CNN
+F 1 "GND" H 1955 3627 50  0000 C CNN
+F 2 "" H 1950 3800 50  0001 C CNN
+F 3 "" H 1950 3800 50  0001 C CNN
+	1    1950 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0117
+U 1 1 5F9710A1
+P 950 3800
+F 0 "#PWR0117" H 950 3550 50  0001 C CNN
+F 1 "GND" H 955 3627 50  0000 C CNN
+F 2 "" H 950 3800 50  0001 C CNN
+F 3 "" H 950 3800 50  0001 C CNN
+	1    950  3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_02x07_Odd_Even K1
+U 1 1 5F9C9EF6
+P 1400 3050
+F 0 "K1" H 1450 3567 50  0000 C CNN
+F 1 "Conn_02x07_Odd_Even" H 1450 3476 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x07_P2.54mm_Vertical" H 1400 3050 50  0001 C CNN
+F 3 "~" H 1400 3050 50  0001 C CNN
+	1    1400 3050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1200 3350 950  3350
+Wire Wire Line
+	950  3350 950  3800
+Wire Wire Line
+	1700 3350 1950 3350
+Wire Wire Line
+	1950 3350 1950 3800
+Wire Wire Line
+	3050 2950 2300 2950
+Wire Wire Line
+	2300 2950 2300 2750
+Wire Wire Line
+	2300 2750 1700 2750
+Wire Wire Line
+	3050 2750 2400 2750
+Wire Wire Line
+	2400 2750 2400 2500
+Wire Wire Line
+	2400 2500 1100 2500
+Wire Wire Line
+	1100 2500 1100 2850
+Wire Wire Line
+	1100 2850 1200 2850
+Wire Wire Line
+	1700 2850 3050 2850
+Wire Wire Line
+	3050 3450 550  3450
+Wire Wire Line
+	550  3450 550  2950
+Wire Wire Line
+	550  2950 1200 2950
+Wire Wire Line
+	3050 3100 2250 3100
+Wire Wire Line
+	2250 3100 2250 2950
+Wire Wire Line
+	2250 2950 1700 2950
+Wire Wire Line
+	3050 3300 2150 3300
+Wire Wire Line
+	2150 3300 2150 3050
+Wire Wire Line
+	2150 3050 1700 3050
+Wire Wire Line
+	3050 3200 2250 3200
+Wire Wire Line
+	2250 3200 2250 3550
+Wire Wire Line
+	2250 3550 600  3550
+Wire Wire Line
+	600  3550 600  3050
+Wire Wire Line
+	600  3050 1200 3050
+Wire Wire Line
+	3050 2300 700  2300
+Wire Wire Line
+	700  2300 700  3150
+Wire Wire Line
+	700  3150 1200 3150
+Wire Wire Line
+	3050 2400 1900 2400
+Wire Wire Line
+	1900 2400 1900 3150
+Wire Wire Line
+	1900 3150 1700 3150
+Wire Wire Line
+	3050 2500 2500 2500
+Wire Wire Line
+	2500 2500 2500 2450
+Wire Wire Line
+	2500 2450 650  2450
+Wire Wire Line
+	650  2450 650  3250
+Wire Wire Line
+	650  3250 1200 3250
+Wire Wire Line
+	2050 2600 2050 3250
+Wire Wire Line
+	2050 3250 1700 3250
+Wire Wire Line
+	2050 2600 3050 2600
+$Comp
+L Device:C C10
+U 1 1 5F9AD48E
+P 7550 2000
+F 0 "C10" H 7665 2046 50  0000 L CNN
+F 1 "5.6pF" H 7665 1955 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 7588 1850 50  0001 C CNN
+F 3 "~" H 7550 2000 50  0001 C CNN
+F 4 "<±0.25pF" H 7550 2000 50  0001 C CNN "Tolerance"
+F 5 "NP0 ceramic chip capacitor" H 7550 2000 50  0001 C CNN "Type"
+	1    7550 2000
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:C C9
+U 1 1 5F9ADAFD
+P 7550 3300
+F 0 "C9" H 7665 3346 50  0000 L CNN
+F 1 "5.6pF" H 7665 3255 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 7588 3150 50  0001 C CNN
+F 3 "~" H 7550 3300 50  0001 C CNN
+F 4 "<±0.25pF" H 7550 3300 50  0001 C CNN "Tolerance"
+F 5 "NP0 ceramic chip capacitor" H 7550 3300 50  0001 C CNN "Type"
+	1    7550 3300
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:C C12
+U 1 1 5F9AFA16
+P 8100 2950
+F 0 "C12" V 7848 2950 50  0000 C CNN
+F 1 "22pF" V 7939 2950 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 8138 2800 50  0001 C CNN
+F 3 "~" H 8100 2950 50  0001 C CNN
+F 4 "±5%" V 8100 2950 50  0001 C CNN "Tolerance"
+F 5 "NP0 ceramic chip capacitor" V 8100 2950 50  0001 C CNN "Type"
+	1    8100 2950
+	0    1    -1   0   
+$EndComp
+$Comp
+L Device:C C13
+U 1 1 5F9B0834
+P 9150 3300
+F 0 "C13" H 9265 3346 50  0000 L CNN
+F 1 "4.7pF" H 9265 3255 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 9188 3150 50  0001 C CNN
+F 3 "~" H 9150 3300 50  0001 C CNN
+F 4 "±5%" H 9150 3300 50  0001 C CNN "Tolerance"
+F 5 "NP0 ceramic chip capacitor" H 9150 3300 50  0001 C CNN "Type"
+	1    9150 3300
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:C C3
+U 1 1 5F9B0BC7
+P 8800 2350
+F 0 "C3" V 8548 2350 50  0000 C CNN
+F 1 "33pF" V 8639 2350 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 8838 2200 50  0001 C CNN
+F 3 "~" H 8800 2350 50  0001 C CNN
+F 4 "±5%" V 8800 2350 50  0001 C CNN "Tolerance"
+F 5 "NP0 ceramic chip capacitor" V 8800 2350 50  0001 C CNN "Type"
+	1    8800 2350
+	0    1    -1   0   
+$EndComp
+$Comp
+L Device:L L1
+U 1 1 5F9B2F47
+P 7550 2650
+F 0 "L1" H 7603 2696 50  0000 L CNN
+F 1 "12nH" H 7603 2605 50  0000 L CNN
+F 2 "Inductor_SMD:L_0603_1608Metric" H 7550 2650 50  0001 C CNN
+F 3 "~" H 7550 2650 50  0001 C CNN
+F 4 "±5%" H 7550 2650 50  0001 C CNN "Tolerance"
+F 5 ">915MHz" H 7550 2650 50  0001 C CNN "SRF"
+	1    7550 2650
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:L L2
+U 1 1 5F9B36A4
+P 8800 2950
+F 0 "L2" V 8619 2950 50  0000 C CNN
+F 1 "10nH" V 8710 2950 50  0000 C CNN
+F 2 "Inductor_SMD:L_0603_1608Metric" H 8800 2950 50  0001 C CNN
+F 3 "~" H 8800 2950 50  0001 C CNN
+F 4 "±5%" V 8800 2950 50  0001 C CNN "Tolerance"
+F 5 ">915MHz" V 8800 2950 50  0001 C CNN "SRF"
+	1    8800 2950
+	0    1    -1   0   
+$EndComp
+$Comp
+L Device:L L3
+U 1 1 5F9B3DB6
+P 8100 2350
+F 0 "L3" V 7919 2350 50  0000 C CNN
+F 1 "12nH" V 8010 2350 50  0000 C CNN
+F 2 "Inductor_SMD:L_0603_1608Metric" H 8100 2350 50  0001 C CNN
+F 3 "~" H 8100 2350 50  0001 C CNN
+F 4 "±5%" V 8100 2350 50  0001 C CNN "Tolerance"
+F 5 ">915MHz" V 8100 2350 50  0001 C CNN "SRF"
+	1    8100 2350
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	7550 2950 7550 2800
+Wire Wire Line
+	7550 2350 7550 2500
+Wire Wire Line
+	7550 2350 7000 2350
+Wire Wire Line
+	6750 2350 6750 2600
+Wire Wire Line
+	6750 2750 6750 2950
+Wire Wire Line
+	6750 2950 7000 2950
+Wire Wire Line
+	7550 2150 7550 2350
+Connection ~ 7550 2350
+Wire Wire Line
+	7550 2950 7950 2950
+Connection ~ 7550 2950
+Wire Wire Line
+	7550 2350 7950 2350
+Wire Wire Line
+	8250 2950 8650 2950
+$Comp
+L power:GND #PWR0108
+U 1 1 5F9FF9DB
+P 7550 1650
+F 0 "#PWR0108" H 7550 1400 50  0001 C CNN
+F 1 "GND" H 7555 1477 50  0000 C CNN
+F 2 "" H 7550 1650 50  0001 C CNN
+F 3 "" H 7550 1650 50  0001 C CNN
+	1    7550 1650
+	1    0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR0109
+U 1 1 5FA006F7
+P 9150 2350
+F 0 "#PWR0109" H 9150 2100 50  0001 C CNN
+F 1 "GND" V 9155 2222 50  0000 R CNN
+F 2 "" H 9150 2350 50  0001 C CNN
+F 3 "" H 9150 2350 50  0001 C CNN
+	1    9150 2350
+	0    -1   1    0   
+$EndComp
+Wire Wire Line
+	8950 2350 9150 2350
+Wire Wire Line
+	7550 3150 7550 2950
+$Comp
+L power:GND #PWR0110
+U 1 1 5FA12264
+P 7550 3650
+F 0 "#PWR0110" H 7550 3400 50  0001 C CNN
+F 1 "GND" H 7555 3477 50  0000 C CNN
+F 2 "" H 7550 3650 50  0001 C CNN
+F 3 "" H 7550 3650 50  0001 C CNN
+	1    7550 3650
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	7550 3650 7550 3450
+Wire Wire Line
+	9150 3150 9150 2950
+Wire Wire Line
+	9150 2950 8950 2950
+$Comp
+L power:GND #PWR0111
+U 1 1 5FA2770C
+P 9150 3650
+F 0 "#PWR0111" H 9150 3400 50  0001 C CNN
+F 1 "GND" H 9155 3477 50  0000 C CNN
+F 2 "" H 9150 3650 50  0001 C CNN
+F 3 "" H 9150 3650 50  0001 C CNN
+	1    9150 3650
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	9150 3650 9150 3450
+Wire Wire Line
+	7550 1850 7550 1650
+$Comp
+L Connector:Conn_Coaxial K2
+U 1 1 5FA3671F
+P 9850 2950
+F 0 "K2" H 9950 2925 50  0000 L CNN
+F 1 "RF out" H 9950 2834 50  0000 L CNN
+F 2 "Connector_Coaxial:SMA_Amphenol_132134_Vertical" H 9850 2950 50  0001 C CNN
+F 3 " ~" H 9850 2950 50  0001 C CNN
+	1    9850 2950
+	1    0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR0112
+U 1 1 5FA38041
+P 9850 2350
+F 0 "#PWR0112" H 9850 2100 50  0001 C CNN
+F 1 "GND" H 9855 2177 50  0000 C CNN
+F 2 "" H 9850 2350 50  0001 C CNN
+F 3 "" H 9850 2350 50  0001 C CNN
+	1    9850 2350
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	9850 2750 9850 2350
+Wire Wire Line
+	9650 2950 9150 2950
+Connection ~ 9150 2950
+$Comp
+L Device:C C11
+U 1 1 5FA752D2
+P 7000 2650
+F 0 "C11" H 7115 2696 50  0000 L CNN
+F 1 "not fitted" H 7115 2605 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 7038 2500 50  0001 C CNN
+F 3 "~" H 7000 2650 50  0001 C CNN
+F 4 "NP0 ceramic chip capacitor" H 7000 2650 50  0001 C CNN "Type"
+	1    7000 2650
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	7000 2800 7000 2950
+Connection ~ 7000 2950
+Wire Wire Line
+	7000 2950 7550 2950
+Wire Wire Line
+	7000 2500 7000 2350
+Connection ~ 7000 2350
+Wire Wire Line
+	7000 2350 6750 2350
+Wire Wire Line
+	8250 2350 8450 2350
+Wire Wire Line
+	6750 2600 4650 2600
+Wire Wire Line
+	4650 2750 6750 2750
+Wire Wire Line
+	8450 2350 8450 1050
+Wire Wire Line
+	8450 1050 6350 1050
+Wire Wire Line
+	6350 1050 6350 2350
+Connection ~ 8450 2350
+Wire Wire Line
+	8450 2350 8650 2350
+Connection ~ 6350 2350
+Wire Wire Line
+	6350 2350 6350 4150
+$Comp
+L Device:C C14
+U 1 1 5F9C1DD5
+P 4150 6350
+F 0 "C14" H 4265 6396 50  0000 L CNN
+F 1 "33pF" H 4265 6305 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 4188 6200 50  0001 C CNN
+F 3 "~" H 4150 6350 50  0001 C CNN
+F 4 "±5%" H 4150 6350 50  0001 C CNN "Tolerance"
+F 5 "NP0 ceramic chip capacitor" H 4150 6350 50  0001 C CNN "Type"
+	1    4150 6350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 6000 4150 6000
+Wire Wire Line
+	4150 6000 4150 6200
+Connection ~ 3550 6000
+Wire Wire Line
+	3550 6700 4150 6700
+Wire Wire Line
+	4150 6700 4150 6500
+Connection ~ 3550 6700
+$EndSCHEMATC

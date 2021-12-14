@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP nRF905
+D Single chip 433/868/915MHz Transceiver, QFN-32
+K Single Chip RF Transciever
+F https://infocenter.nordicsemi.com/pdf/nRF905_PS_v1.5.pdf
+$ENDCMP
+#
+#End Doc Library
