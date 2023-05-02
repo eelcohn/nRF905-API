@@ -25,6 +25,10 @@ https://arduino.esp8266.com/stable/package_esp8266com_index.json,https://dl.espr
 ![cfgboot](https://github.com/eelcohn/nRF905-API/blob/master/images/cfgboot.png)<br>
 9. Your device will now connect to your WiFi network.
 
+## Support
+
+Due to lack of time it might take a long time for me to give support.
+
 ## Usage
 
 ### /api/v1/config.json
