@@ -114,6 +114,7 @@ size_t Fan::discover(const uint8_t device_id, const uint32_t timeout) {
 				frametype = rxbuffer[i][0x05];	// TODO: use a struct for rxbuffer, and do something like rxbuffer.frametype ?
 				switch (frametype) {
 					case FAN_FRAME_0B :	// Main unit link was succesful (acknowledge)
+					case FAN_FRAME_04 :	// Main unit link was succesful (acknowledge) BETA TESTING for ComfoAir E300 RF
 						if ((rx_type = device_type) && (rx_id == device_id) && (tx_type == config.fan_main_unit_type) && (tx_id == config.fan_main_unit_id)) {
 							if (result != FAN_RESULT_SUCCESS) {
 								Serial.println("Debug: Link successful to unit with ID 0x"+(String(tx_id, HEX))+" on network 0x"+(String(network_id, HEX)));
