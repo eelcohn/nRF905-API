@@ -24,6 +24,7 @@ enum {	FAN_FRAME_SETVOLTAGE			= 0x01,		// Set speed (voltage / percentage)
 	FAN_NETWORK_JOIN_OPEN			= 0x06,
 	FAN_TYPE_FAN_SETTINGS			= 0x07,		// Current settings, sent by fan in reply to 0x01, 0x02, 0x10
 	FAN_FRAME_0B				= 0x0B,
+	FAN_FRAME_04				= 0x04,
 	FAN_NETWORK_JOIN_ACK			= 0x0C,
 //	FAN_NETWORK_JOIN_FINISH		= 0x0D,
 	FAN_TYPE_QUERY_NETWORK			= 0x0D,

@@ -2,10 +2,10 @@
 
 #include <EEPROM.h>
 #include <SPI.h>
-#include "esp8266.h"
 #include "../../board.h"	// board-> functions
 #include "../../nvram.h"	// NVRAMBuffer
 #include "../../utils.h"	// serialPrintHex()
+#include "esp8266.h"
 
 // Create an instance of the server
 #if NRF905API_HTTPS == 1

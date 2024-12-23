@@ -1,9 +1,9 @@
 #ifdef RPI
 
 #include <SPI.h>
-#include "esp32.h"
 #include "../../board.h"	// board-> functions
 #include "../../utils.h"	// serialPrintHex()
+#include "esp32.h"
 
 // Create an instance of the server
 #if NRF905API_HTTPS == 1

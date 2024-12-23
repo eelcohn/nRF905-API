@@ -3,10 +3,10 @@
 #include <EEPROM.h>
 #include <SPI.h>
 #include <rom/rtc.h>		// RESET_REASON
-#include "esp32.h"
 #include "../../board.h"	// board-> functions
 #include "../../nvram.h"	// NVRAMBuffer
 #include "../../utils.h"	// serialPrintHex()
+#include "esp32.h"
 
 // Create an instance of the server
 #if NRF905API_HTTPS == 1
@@ -208,11 +208,11 @@ void Board::set_hostname(const char *hostname) {
 }
 
 String Board::get_localIPv6(void) {
-	return WiFi.localIPv6().toString();
+	return WiFi.localIP().toString();
 }
 
 bool Board::enable_IPv6(void) {
-	return WiFi.enableIpV6();
+	return WiFi.enableIPv6();
 }
 
 void Board::setPinMode(const uint8_t pin, const uint8_t mode) {

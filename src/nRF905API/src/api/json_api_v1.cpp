@@ -309,9 +309,6 @@ void apiv1_status() {
 	server.sendContent(",\"system_status\":{");
 	server.sendContent("\"board\":\"" + board->get_arch() + "\",");
 	server.sendContent("\"firmware_version\":\"" + String(FPSTR(firmware_version)) + "\",");
-#if NRF905API_NTP == 1
-	server.sendContent("\"system_time\":\"" + timeClient.getFormattedTime() + "\",");
-#endif
 	server.sendContent("\"restart_reason\":" + String(board->restartReason()) + ",");
 	server.sendContent("\"cpu_id\":\"" + String(board->get_cpu_id(), HEX) + "\",");
 	server.sendContent("\"cpu_frequency\":" + String(board->getCPUFreqMhz()) + ",");
