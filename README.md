@@ -142,3 +142,21 @@ Example:<br>
 |  Parameter     | Required | Description |
 |:--------------:|:--------:|:------------|
 |  `device_id`   |   No     | Device ID:<br>ID of a fan device. By default it will select the fan it's linked to |
+
+## Disclaimer
+
+This project is an independent, unofficial project. It is not affiliated with, endorsed by or supported by
+Zehnder Group, BUVA, ESPHome, Nabu Casa or any other manufacturer or organisation mentioned. All product names,
+trademarks and other intellectual property of third parties mentioned in this project remain the property of
+their respective owners and are used for identification and interoperability only.
+
+The information and software in this project are provided "as is", for personal and educational use, without
+warranty of any kind, express or implied, including fitness for a particular purpose. The protocol description
+was obtained by observing radio traffic and may be incomplete or wrong. Using this project to control
+ventilation equipment is at your own risk: it may, for example, affect the equipment's warranty, or its
+ventilation of your home.
+
+You must not use this project, or any information in it, in a harmful or illegal way, including in ways that
+violate radio regulations or the rights of others. The author(s) of this project and the owners of any
+third-party intellectual property cannot be held liable for any damage or loss resulting from the use or
+misuse of this project or its information.
