@@ -5,6 +5,7 @@
 
 #include <SPI.h>	// SPIClass
 
+#include <WiFi.h>
 #if NRF905API_HTTPS == 1
 #include <WebServerSecure.h>
 extern WebServerSecure server;

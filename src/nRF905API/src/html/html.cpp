@@ -45,13 +45,13 @@ void htmlConfig() {
 		/* TODO input validation */
 		config.signature = NVRAM_SIGNATURE;
 		config.version = NVRAM_VERSION;
-		strncpy(config.wifi_hostname, server.arg("hostname").c_str(), sizeof(MAX_WIFI_HOSTNAME));
+		strncpy(config.wifi_hostname, server.arg("hostname").c_str(), MAX_WIFI_HOSTNAME);
 		strncpy(config.wifi_ssid, server.arg("ssid").c_str(), sizeof(config.wifi_ssid));
 		strncpy(config.wifi_password, server.arg("wifi_password").c_str(), sizeof(config.wifi_password));
 		if (server.hasArg("ntpserver"))
-			strncpy(config.ntp_server, server.arg("ntpserver").c_str(), sizeof(MAX_NTPSERVER));
+			strncpy(config.ntp_server, server.arg("ntpserver").c_str(), MAX_NTPSERVER);
 		else
-			strncpy(config.ntp_server, DEFAULT_NTP_SERVER, sizeof(MAX_NTPSERVER));
+			strncpy(config.ntp_server, DEFAULT_NTP_SERVER, MAX_NTPSERVER);
 		if (server.hasArg("ntpoffset"))
 			config.ntp_offset = server.arg("ntpoffset").toInt();
 		else
@@ -61,15 +61,15 @@ void htmlConfig() {
 		else
 			config.ntp_interval = DEFAULT_NTP_INTERVAL;
 		if (server.hasArg("ota_password"))
-			strncpy(config.ota_password, server.arg("ota_password").c_str(), sizeof(MAX_OTA_PASSWORD));
+			strncpy(config.ota_password, server.arg("ota_password").c_str(), MAX_OTA_PASSWORD);
 		else
-			strncpy(config.ota_password, DEFAULT_OTA_PASSWORD, sizeof(MAX_OTA_PASSWORD));
+			strncpy(config.ota_password, DEFAULT_OTA_PASSWORD, MAX_OTA_PASSWORD);
 		if (server.hasArg("ota_port"))
 			config.ota_port = server.arg("ota_port").toInt();
 		else
 			config.ota_port = DEFAULT_OTA_PORT;
-		strncpy(config.http_username, server.arg("http_username").c_str(), sizeof(MAX_HTTP_USERNAME));
-		strncpy(config.http_password, server.arg("http_password").c_str(), sizeof(MAX_HTTP_PASSWORD));
+		strncpy(config.http_username, server.arg("http_username").c_str(), MAX_HTTP_USERNAME);
+		strncpy(config.http_password, server.arg("http_password").c_str(), MAX_HTTP_PASSWORD);
 
 		switch (server.arg("profile").toInt()) {
 			case FAN_PROFILE_ZEHNDER :	// Zehnder

@@ -35,7 +35,7 @@ void htmlConfigWizardLanguage(void) {
 
 	if (server.method() == HTTP_POST) {
 		if (server.hasArg("language")) {
-			strncpy(config.language, server.arg("language").c_str(), sizeof(MAX_LANGUAGE));
+			strncpy(config.language, server.arg("language").c_str(), MAX_LANGUAGE);
 		}
 	}
 
@@ -78,10 +78,10 @@ void htmlConfigWizardAuthentication(void) {
 
 	if (server.method() == HTTP_POST) {
 		if (server.hasArg("http_username")) {
-			strncpy(config.http_username, server.arg("http_username").c_str(), sizeof(MAX_HTTP_USERNAME));
+			strncpy(config.http_username, server.arg("http_username").c_str(), MAX_HTTP_USERNAME);
 		}
 		if (server.hasArg("http_password")) {
-			strncpy(config.http_password, server.arg("http_password").c_str(), sizeof(MAX_HTTP_PASSWORD));
+			strncpy(config.http_password, server.arg("http_password").c_str(), MAX_HTTP_PASSWORD);
 		}
 	}
 
@@ -121,7 +121,7 @@ void htmlConfigWizardWifi(void) {
 
 	if (server.method() == HTTP_POST) {
 		if (server.hasArg("hostname")) {
-			strncpy(config.wifi_hostname, server.arg("hostname").c_str(), sizeof(MAX_WIFI_HOSTNAME));
+			strncpy(config.wifi_hostname, server.arg("hostname").c_str(), sizeof(config.wifi_hostname));
 		}
 		if (server.hasArg("ssid")) {
 			strncpy(config.wifi_ssid, server.arg("ssid").c_str(), sizeof(config.wifi_ssid));
@@ -421,9 +421,9 @@ void htmlConfigWizardAdvanced(void) {
 	if (server.method() == HTTP_POST) {
 		/* TODO input validation */
 		if (server.hasArg("ntpserver"))
-			strncpy(config.ntp_server, server.arg("ntpserver").c_str(), sizeof(MAX_NTPSERVER));
+			strncpy(config.ntp_server, server.arg("ntpserver").c_str(), MAX_NTPSERVER);
 		else
-			strncpy(config.ntp_server, DEFAULT_NTP_SERVER, sizeof(MAX_NTPSERVER));
+			strncpy(config.ntp_server, DEFAULT_NTP_SERVER, MAX_NTPSERVER);
 		if (server.hasArg("ntpoffset"))
 			config.ntp_offset = server.arg("ntpoffset").toInt();
 		else
@@ -433,9 +433,9 @@ void htmlConfigWizardAdvanced(void) {
 		else
 			config.ntp_interval = DEFAULT_NTP_INTERVAL;
 		if (server.hasArg("ota_password"))
-			strncpy(config.ota_password, server.arg("ota_password").c_str(), sizeof(MAX_OTA_PASSWORD));
+			strncpy(config.ota_password, server.arg("ota_password").c_str(), MAX_OTA_PASSWORD);
 		else
-			strncpy(config.ota_password, DEFAULT_OTA_PASSWORD, sizeof(MAX_OTA_PASSWORD));
+			strncpy(config.ota_password, DEFAULT_OTA_PASSWORD, MAX_OTA_PASSWORD);
 		if (server.hasArg("ota_port"))
 			config.ota_port = server.arg("ota_port").toInt();
 		else

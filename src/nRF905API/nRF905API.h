@@ -6,6 +6,8 @@
 #ifndef __NRF905API_H__
 #define __NRF905API_H__
 
+#include "config.h"
+
 #if NRF905API_HTTPS == 1
 #include "certificate.h"
 #endif

@@ -118,8 +118,8 @@ void setup() {
 		if (checkNVRAMIsValidData() == false) {
 			loadNVRAMDefaults();
 		}
-		strncpy(config.http_username, "", sizeof(MAX_HTTP_USERNAME));
-		strncpy(config.http_password, "", sizeof(MAX_HTTP_PASSWORD));
+		strncpy(config.http_username, "", MAX_HTTP_USERNAME);
+		strncpy(config.http_password, "", MAX_HTTP_PASSWORD);
 
 		server.begin();
 		htmlAddHandlers();
@@ -193,6 +193,9 @@ void setup() {
 	// Set the certificates from PMEM (if using DRAM remove the _P from the call)
 	server.getServer().setRSACert(new BearSSL::X509List(serverCert), new BearSSL::PrivateKey(serverKey));
 //	server.getServer().setServerKeyAndCert_P(rsakey, sizeof(rsakey), x509, sizeof(x509));
+#ifdef ARDUINO_ARCH_ESP8266
+	server.getServer().setBufferSizes(2048, 837);
+#endif
 #endif
 
 	// Start the HTTP server
@@ -235,9 +238,9 @@ void setup() {
 	rxnum = 0;
 	rx_buffer_overflow = false;
 	Serial.printf("nRF905: switching to receive mode\n");
-	Serial.printf("mode=%i", nrf905->getMode());
+	Serial.printf("mode=%i\n", nrf905->getMode());
 	nrf905->setModeReceive();
-	Serial.printf("mode=%i", nrf905->getMode());
+	Serial.printf("mode=%i\n", nrf905->getMode());
 	Serial.printf("Setup done\n");
 }
 
